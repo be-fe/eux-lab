@@ -1,12 +1,14 @@
-## UI demo 统一规范
+## EUX Lab wiki get started
 
 ```
-cd acard-ui-demo
+cd eux-lab
 npm install
 bower install
+
 npm install -g forever
 npm install -g nodemon
+npm install -g gulp
 
-npm start
+gulp
 ```
 
