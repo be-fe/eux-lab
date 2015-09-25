@@ -1,0 +1,42 @@
+---tpl
+<h1>hello</h1>
+<div><%= c.content() %></div>
+
+---content
+<div class="content">a button : <%= c.button() %></div>
+
+---button
+<button><%= d.text %></button>
+
+---button2
+<span class="button"><%= d.text %></span>
+
+
+<script>
+    // comment
+
+    var content = tpl({
+       _: locals.tpl,
+        content: {
+            _: locals.content,
+            button: {
+                _: locals.button,
+                data: {
+                    text: 'Edit'
+                }
+            }
+        }
+    });
+
+    var content2 = tpl({
+        _: content,
+        'content.button': {
+            _: locals.button2,
+            'data.text': 'Save'
+        }
+    });
+
+    bind('section',content);
+
+    bind('section2', content2);
+</script>

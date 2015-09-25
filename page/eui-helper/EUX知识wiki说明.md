@@ -7,6 +7,7 @@
 * 为EUX blog收集积累好文章
 * 为有个卡片沉淀可在初始版本使用的知识
 * 创建个快速可用的小lab
+* 团队熟悉Git协作
 
 wiki使用markdown的规范来撰写, 利用chokidar来进行监视和编译更新. 可以参照 [测试页面](get-started/test-markdown-page/index)
  
