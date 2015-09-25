@@ -223,6 +223,7 @@ setInterval(function () {
 }, 500);
 
 var addCronJob = function (event, path) {
+    path = path.split('\\').join('/');
     if (event == 'unlinkDir' || event == 'addDir') {
         cronjobs.push({
             path: path,
@@ -293,7 +294,7 @@ var compileJs = function (res, isShareJs, noCacheCheck) {
     var rgxSection = /^---\s*/mg;
     var rgxName = /^([\S\s]+?)\s*$/m;
     var sections = content.split(rgxSection);
-    var rgxScript = /<script>([\s\S]+?)<\/script>\s*/g;
+    var rgxScript = /<script>([\s\S]+?)<\/script>\s*$/;
 
     var compiled = fs.readFileSync(__dirname + '/templates/js-compile-template.js').toString();
 
@@ -327,7 +328,7 @@ var compileJs = function (res, isShareJs, noCacheCheck) {
             var lines = section.split('\n');
 
             locals.push('  tmp.push(' + lines.map(function (line) {
-                return JSON.stringify(line);
+                return JSON.stringify(line).split('</script>').join('<" + "/script>');
             }).join(");\n    tmp.push(") + ');\n');
 
             var stringifiedName = JSON.stringify(name);
