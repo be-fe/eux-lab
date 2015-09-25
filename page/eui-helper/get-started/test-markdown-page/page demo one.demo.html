@@ -1,0 +1,47 @@
+---page 1
+<h3><%= d.title %></h3>
+<%= c.message(d) %>
+
+---page 1 message
+<p><%- d.message %></p>
+
+<script>
+    var page = tpl({
+        _: tpl('page 1'),
+        message: tpl('page 1 message')
+    });
+
+    var page1 = tpl({
+        _: function (d, c) {
+            d.title += ' [adapted #1]';
+            return c.page(d);
+        },
+        page: page
+    });
+
+    var page1_2 = tpl({
+        _: function (d, c) {
+            d.title += ' [adapted #2]';
+            return c.page(d);
+        },
+        page: page1
+    });
+
+    bind('', page1_2, {
+        data: function () {
+            return {
+                title: 'hello page 1',
+                message: 'some message'
+            }
+        }
+    });
+
+    bind('hello world', page1, {
+        data: function () {
+            return {
+                title: 'hello again',
+                message: 'world again'
+            }
+        }
+    });
+</script>

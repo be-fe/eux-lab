@@ -1,0 +1,28 @@
+{
+  "name": "card-ui-demo",
+  "version": "0.0.1",
+  "authors": [
+    "Liang Zheng <jspop_no1@hotmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "dev/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "lodash": "~3.10.1",
+    "fontawesome": "~4.4.0",
+    "almond": "~0.3.1",
+    "requirejs": "~2.1.20",
+    "riotjs": "~2.2.4",
+    "angularjs": "~1.4.6",
+    "vue": "~0.12.15",
+    "backbone": "~1.2.3",
+    "angular-ui-router": "~0.2.15"
+  }
+}

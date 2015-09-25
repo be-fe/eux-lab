@@ -1,0 +1,7 @@
+
+---button
+<div>
+{{t.content}}
+</div>
+
+"<div>\n" + t.content + "\n</div>\n"

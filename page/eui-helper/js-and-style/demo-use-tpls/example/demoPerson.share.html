@@ -1,0 +1,17 @@
+---person
+<div>
+    <p>name: <span><%- d.name %><span></p>
+    <p>age: <span><%- d.age %></span></p>
+    <div class='controls'>
+        <%= c.button() %>
+    </div>
+</div>
+
+<script>
+    useTpls([shares.demoButton], function() {
+        tpl({
+            _: locals.person,
+            button: globals.demoButton
+        }, 'demoPerson');
+    });
+</script>

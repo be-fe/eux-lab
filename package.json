@@ -1,0 +1,26 @@
+{
+  "name": "card-ui-demo",
+  "version": "0.0.1",
+  "description": "有个卡片UI组件Demo平台",
+  "main": "app.js",
+  "dependencies": {
+    "chokidar": "^1.0.5",
+    "express": "^4.13.3",
+    "forever": "^0.15.1",
+    "gulp": "^3.9.0",
+    "gulp-open": "^1.0.0",
+    "gulp-shell": "^0.4.3",
+    "less": "^2.5.1",
+    "lodash": "^3.10.1",
+    "marked": "^0.3.5",
+    "md5": "^2.0.0",
+    "nodemon": "^1.4.1",
+    "st": "^0.5.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ./node_modules/nodemon/bin/nodemon.js -i src/ -i temp/ -i build/ app"
+  },
+  "author": "",
+  "license": ""
+}

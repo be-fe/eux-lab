@@ -1,0 +1,114 @@
+---angularExample
+<div>
+    <div ng-controller="MyController">
+        hello, {{name}}
+    </div>
+</div>
+
+---uiRouterBody
+<div ui-view="header"></div>
+<div class="content" ui-view="content"></div>
+<div ui-view="footer"></div>
+
+<script>
+    require(['/vendor/angular/angular.js'], function () {
+        require(['/vendor/angular-ui-router/release/angular-ui-router.js'], function () {
+            bind('normal', locals.angularExample, {
+                init: function (c) {
+                    angular.module('AngularApp', [])
+                            .controller('MyController', [
+                                '$scope',
+                                function ($scope) {
+                                    $scope.name = 'Angular example'
+                                }
+                            ]);
+
+                    angular.bootstrap(c.$_, ['AngularApp'])
+                }
+            });
+
+            bind('ui-router', locals.uiRouterBody, {
+                init: function (c) {
+                    var products = [{
+                        id: 1,
+                        name: 'Angular',
+                        description: 'Angular is a js framework.'
+                    }, {
+                        id: 2,
+                        name: 'Vuejs',
+                        description: 'Vuejs is a js framework, similar to Angular.'
+                    }, {
+                        id: 3,
+                        name: 'Reactjs',
+                        description: 'Reactjs is yet another framework.'
+                    }];
+
+                    angular.module('UIRouterApp', ['ui.router'])
+                            .controller('ProductListController', [
+                                function () {
+                                    var vm = this;
+                                    vm.products = products;
+                                }
+                            ])
+                            .controller('ProductController', [
+                                '$state',
+                                function ($state) {
+                                    var id = $state.params.productId;
+                                    var vm = this;
+
+                                    vm.product = null;
+                                    products.some(function(product) {
+                                        if (product.id == id) {
+                                            vm.product = product;
+                                            return true;
+                                        }
+                                    });
+                                }
+                            ])
+                            .config([
+                                '$urlRouterProvider',
+                                '$stateProvider',
+                                function ($urlRouterProvider, $stateProvider) {
+                                    var commonViews = {
+                                        header: {
+                                            templateUrl: '_ui-router/header.tpl.html'
+                                        },
+                                        footer: {
+                                            templateUrl: '_ui-router/footer.tpl.html'
+                                        }
+                                    };
+
+                                    $stateProvider.state('product-list', {
+                                        url: '/product-list',
+                                        views: {
+                                            header: commonViews.header,
+                                            content: {
+                                                templateUrl: '_ui-router/product-list.tpl.html',
+                                                controller: 'ProductListController as vm'
+                                            },
+                                            footer: commonViews.footer
+                                        }
+                                    });
+
+                                    $stateProvider.state('product', {
+                                        url: '/product/:productId',
+                                        views: {
+                                            header: commonViews.header,
+                                            content: {
+                                                templateUrl: '_ui-router/product.tpl.html',
+                                                controller: 'ProductController as vm'
+                                            },
+                                            footer: commonViews.footer
+                                        }
+                                    });
+
+                                    $urlRouterProvider.when('', '/product-list');
+                                }
+                            ]);
+
+                    angular.bootstrap(c.$_, ['UIRouterApp']);
+                }
+            });
+        });
+    });
+</script>

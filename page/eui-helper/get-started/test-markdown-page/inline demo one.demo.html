@@ -1,0 +1,19 @@
+---hello world 2
+
+<div><%= d.title %></div>
+
+<script>
+    bind('', 'hello world 2', {
+        data: function () {
+            return {
+                title: 'hello from inline demo one'
+            }
+        }
+    });
+
+    bind('section 2', 'hello world 2', {
+        data: {
+            title: 'hello section 2'
+        }
+    })
+</script>

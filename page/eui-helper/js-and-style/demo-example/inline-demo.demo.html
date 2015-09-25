@@ -1,0 +1,32 @@
+---demoTemplate
+<span><%- d.text %>, <%- d.name %></span>
+
+
+<script>
+    useTpls([shares.demo], function(demoTpl) {
+        bind('', tpl({
+            _: locals.demoTemplate,
+            data: {
+                name : 'demo'
+            }
+        }), {
+            data: {
+                text: 'hello'
+            }
+        });
+
+        bind('inline 2', globals.demoComp, {
+            data: {
+                title: 'hello inline 2',
+                list: ['jquery', 'nodejs', 'angularjs', 'reactjs', 'vuejs']
+            }
+        });
+
+        bind('inline 3', globals.demoComp, {
+            data: {
+                title: 'hello inline 3',
+                list: ['apple', 'pear', 'peach', 'sugar cane']
+            }
+        });
+    });
+</script>

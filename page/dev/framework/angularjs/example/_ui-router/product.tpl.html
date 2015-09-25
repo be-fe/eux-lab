@@ -1,0 +1,6 @@
+<div ng-if="vm.product">
+    <div class="back"><a href="#/product-list">&lt; Back to framework list</a></div>
+    <div class="name">{{vm.product.name}}</div>
+    <div class="description">{{vm.product.description}}</div>
+</div>
+<div ng-if="!vm.product">No product found for this product id.</div>

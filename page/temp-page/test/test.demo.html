@@ -1,0 +1,69 @@
+---helloWorld
+<h1>hello <%- d.name %></h1>
+
+---card
+<div class="something">
+    <h2><%= d.title %></h2>
+    <p><%= c.content(d) %></p>
+</div>
+
+---content
+<ul>
+    <% _.each(d.list, function(item) { %>
+    <li><%- item %></li>
+    <% }); %>
+</ul>
+<%= c.button() %>
+
+---button
+<button><%- d.text %></button>
+
+<script>
+    bind('', locals.helloWorld, {
+        data: {
+            name: 'meijingjing'
+        }
+    });
+
+    var myTpl = tpl({
+        _: locals.card,
+        content: {
+            _: locals.content,
+            button: {
+                _: locals.button,
+                data: {
+                    text: 'Save'
+                }
+            }
+        }
+    });
+
+    bind('another', myTpl, {
+        data: {
+            title: 'a title',
+            list: ['a', 'b', 'c']
+        }
+    });
+
+    var yourTpl = tpl({
+        _: myTpl,
+        data: {
+            title: 'some title',
+            list: [1, 2 , 3]
+        },
+        'content.button.data.text': 'Edit'
+    });
+
+    bind('two', yourTpl, {
+        data: {
+            title: 'another title'
+        },
+        init: function(c) {
+            require(['./test-lib.js'], function(testLib) {
+                c.$_.append('<h3>' + testLib.sayHello() + '</h3>');
+            });
+        }
+    });
+
+
+</script>

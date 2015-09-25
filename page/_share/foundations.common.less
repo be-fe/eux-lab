@@ -1,0 +1,68 @@
+
+@grid: 10px;
+
+// --- COLORS ---
+@color-text: #333;
+@color-card-title: @color-text;
+@color-card-content: #555;
+@color-font-card-footer: #777;
+@color-font-browser-title: #999;
+
+@color-body-back: #f4f8fb;
+@color-text-back: linear-gradient(top, rgba(0,0,0,0.8), rgba(0,0,0,0.2));
+
+@color-transparent: rgba(0,0,0,0);
+@light-transparent: rgba(0,0,0,0.1);
+
+@color-light-grey: #ccc;
+@color-medium-grey: #aaa;
+@color-dark-grey: #555;
+
+@color-light-yellow: #FFFBF4;
+
+@color-border-gray: #d7d7d7;
+@color-border-context: #e7e7e7;
+@color-star: #fbd13d;
+
+
+// --- MIXINS ---
+.background-gradient(@start, @stop) {
+  background: -webkit-linear-gradient(top, @start, @stop);
+  background: -moz-linear-gradient(top, @start, @stop);
+  background: -ms-linear-gradient(top, @start, @stop);
+  background: -o-linear-gradient(top, @start, @stop);
+}
+
+.transform-scale(@zoom) {
+  transform: scale(0.5);
+  -o-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+}
+.transform-rotateY(@deg) {
+  -webkit-transform: rotateY(@deg);
+  -moz-transform: rotateY(@deg);
+  -o-transform: rotateY(@deg);
+  transform: rotateY(@deg);
+}
+.backface-visibility() {
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -o-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.transition-transform(@time){
+  -webkit-transition: -webkit-transform @time;
+  -moz-transition: -moz-transform @time;
+  -o-transition: -o-transform @time;
+  transition: transform @time;
+}
+
+.blur (@blurPixel) {
+  -webkit-filter: blur(@blurPixel);
+  -moz-filter: blur(@blurPixel);
+  -o-filter: blur(@blurPixel);
+  -ms-filter: blur(@blurPixel);
+  filter: blur(@blurPixel);
+}

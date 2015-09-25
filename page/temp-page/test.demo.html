@@ -1,0 +1,215 @@
+---test
+<h2><%- d %></h2>
+
+---func
+<h3><%- d %></h3>
+
+---output
+<div class="output">
+    <pre><code><%- d %></code></pre>
+</div>
+
+---page1
+<h3><%= d.title %></h3>
+<%= c.message(d) %>
+
+---page1Message
+<p><%- d.message %></p>
+
+<script>
+    var compile = __tpl__;
+    var g = window;
+
+    var testRelated = {
+        tpl: function (tplObj) {
+            tplObj = compile(tplObj);
+            console.log(tplObj);
+            console.log(tplObj.__tpl_obj__);
+            return tplObj
+        },
+        tests: {
+            test1: function (funcs) {
+                funcs.t1 = compile({
+                    _: function (d, c, s) {
+                        return c.header(d) + c.content(d) + c.footer(d);
+                    },
+                    header: function () {
+                        return 'header: ';
+                    },
+                    content: function () {
+                        return 'content: ';
+                    },
+                    footer: function (d) {
+                        return 'footer: ' + d;
+                    },
+                    data: 'hello, footer'
+                });
+
+                funcs.t2 = compile({
+                    _: funcs.t1,
+                    footer: function (d) {
+                        return d + ' - footer';
+                    },
+                    data: 'footer in front'
+                });
+
+            },
+            test2: function (funcs) {
+                funcs.t = compile({
+                    _: '<div><%= c.header(d) %></div><div><%= c.content(d) %></div>',
+                    header: {
+                        _: function (d, c) {
+                            return c.logo() + ', ' + c.avatar();
+                        },
+                        logo: {
+                            _: 'logo'
+                        },
+                        avatar: {
+                            _: 'avatar'
+                        }
+                    },
+                    content: function () {
+                        return 'content';
+                    }
+                });
+
+                funcs.t2 = compile({
+                    _: funcs.t,
+                    'header.logo': {_: 'logo#2'}
+                });
+
+                funcs.t3 = compile({
+                    _: funcs.t2,
+                    header: {
+                        avatar: {
+                            _: function (d, c) {
+                                return ' avatar#' + d.img;
+                            },
+                            data: {
+                                img: '1.png'
+                            }
+                        },
+                        logo: {_: 'hello boy'}
+                    }
+                });
+
+                funcs.t4 = compile({
+                    _: funcs.t3,
+                    header: {
+                        _: '<%= c.avatar() %> {and then} <%= c.logo() %>'
+                    }
+                });
+            },
+            share: function(fns) {
+                fns.t1 = compile({
+                    _: '<%= c.sec1() %> : <%= c.sec2() %> : <%= d && d.name || "what the ..." %>',
+                    sec1: function() {
+                        return 'sec1'
+                    },
+                    sec2: function() {
+                        return 'sec2'
+                    }
+                });
+
+                fns.t2 = compile({
+                    _: fns.t1,
+                    data: {
+                        name: 'james'
+                    }
+                });
+
+                fns.t3 = compile({
+                    _: '<%= c.sec2() %> : <%= c.sec1() %> : <%= d || "what the ... again"%>',
+                    _ext: fns.t1,
+                    data: 'marry'
+                });
+
+                fns.t4 = compile({
+                    _: fns.t2,
+                    data: {
+                        name: 'liang'
+                    }
+                });
+
+                fns.t5 = compile({
+                    _: fns.t2,
+                    'data.name': 'liang using compact'
+                })
+            },
+            ensureInherited: function(fns) {
+                var page = tpl({
+                    _: locals.page1,
+                    message: locals.page1Message
+                });
+
+                var page1 = tpl({
+                    _: function (d, c) {
+                        d.title += ' [adapted #1]';
+                        return c.page(d);
+                    },
+                    page: page
+                });
+
+                var page1_2 = tpl({
+                    _: function (d, c) {
+                        d.title += ' [adapted #2]';
+                        return c.page(d);
+                    },
+                    page: page1
+                });
+
+                fns.page = page;
+                fns.page.data = {
+                    title: 'hello page',
+                    message: 'message page'
+                };
+
+                fns.page1 = page1;
+                fns.page1.data = {
+                    title: 'hello page1',
+                    message: 'message page1'
+                };
+
+                fns.page1_2 = page1_2;
+                fns.page1_2.data = {
+                    title: 'hello page2',
+                    message: 'message page2'
+                };
+            }
+        },
+        runTest: function ($demo) {
+            var tpls = {
+                test: locals.test,
+                func: locals.func,
+                output: locals.output
+            };
+
+            var log = function(type) {
+                var args = [].slice.call(arguments);
+                args.shift();
+                message = args.join(' ');
+
+                $demo.append(tpls[type](message));
+            };
+
+            var ts = window.ts = window.ts || {};
+
+            _.each(this.tests, function (test, name) {
+                log('test', 'running tests - ', name);
+
+                var funcs = ts[name] = {};
+                test(funcs);
+                for (var key in funcs) {
+                    log('func', 'testing func - ', name + '.' + key);
+                    log('output', funcs[key](funcs[key].data));
+                }
+            });
+        }
+    };
+
+    bind('', '', {
+        init: function(c) {
+            testRelated.runTest(c.$_);
+        }
+    });
+</script>
