@@ -128,6 +128,7 @@ var renderLevel = function (levelItems, levelIdx) {
                 '       <span class="fa icon-none fa-circle"></span>' +
                 '   </span>' +
                 '<span class="title-content">' + escape(item.title) + '</span>' +
+                '   <span class="read-status fa fa-check"></span>' +
                 '</div>');
         }
         html.push('<div class="children">');

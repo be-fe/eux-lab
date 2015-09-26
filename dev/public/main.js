@@ -1,11 +1,18 @@
 $(function() {
 
+    var DATA_KEY = {
+        wiki: '/simple-data/wiki-status'
+    };
+
     var $content = $('iframe');
     var $sidebar = $('.sidebar');
     var $sidebarWrapper = $('.sidebar-wrapper');
     var $pageFilterContainer = $('.page-filter-container');
     var $levels = $('.sidebar .level');
     var $titles = $('.sidebar .title');
+    var $readStatus = $('#read-status');
+
+    var readStatus = {};
 
     var urlChanged = function() {
         console.log('hash changed : ', location.hash);
@@ -30,8 +37,14 @@ $(function() {
         .on('click', '.title-content', function clickTitleContent() {
             var $t = $(this).parent();
             console.log('url clicked : ', $t.attr('url'));
-            location.hash = $t.attr('url');
+
+            var url = location.hash = $t.attr('url');
+
+            $t.children('.read-status').addClass('read');
+            readStatus[url] = 1;
+            saveReadStatus();
         })
+
         .on('focus', '#page-filter', function focusOnPageFilter() {
             var $t = $(this);
 
@@ -48,13 +61,11 @@ $(function() {
 
             scrollToLevel();
         }, 200))
-
         .on('keydown', '#page-filter', function checkEscapeButton(e) {
             if (e.keyCode == 27) {
                 $(this).val('');
             }
         })
-
         .on('mouseup', '#page-filter', function mouseUpToClear() {
             $(this).select();
         })
@@ -63,12 +74,15 @@ $(function() {
             toggleExpandingStatus($(this).parent().parent());
             saveExpandingStatus();
         })
-
     ;
 
     $sidebar.on('scroll', _.debounce(function onSidebarScroll() {
         var scrollTop = $sidebar.scrollTop();
         $pageFilterContainer.toggleClass('fixed', scrollTop != 0);
+
+        var scrollLeft = $sidebar.scrollLeft();
+
+        $readStatus.html('.read-status.fa { right: ' + (-scrollLeft) + 'px}');
     }, 200));
 
     $levels.each(function() {
@@ -82,8 +96,10 @@ $(function() {
         $level.toggleClass('no-child', childrenLength == 0);
     });
 
-    $.get('/simple-data/wiki-status')
+    $.get(DATA_KEY.wiki)
         .done(function(data) {
+
+            // use expanding status to revert the expanding status
             if (data.expanded) {
                 $levels.filter('[level=1]').each(function() {
                     toggleExpandingStatus($(this), false);
@@ -103,6 +119,19 @@ $(function() {
                     toggleExpandingStatus($(this), false);
                 });
             }
+
+            // use read status
+            if (data.read) {
+                $titles.each(function() {
+                    var $title = $(this), url = $title.attr('url');
+
+                    if (url in data.read) {
+                        $title.find('.read-status').addClass('read');
+                    }
+                });
+
+                readStatus = data.read;
+            }
         });
 
     var scrollToLevel = function _scrollToLevel($level) {
@@ -119,7 +148,7 @@ $(function() {
     };
 
     var saveExpandingStatus = _.debounce(function _saveExpandingStatus() {
-        $.post('/simple-data/wiki-status', {
+        $.post(DATA_KEY.wiki, {
             expanded: _.invert(
                 _.map($levels.filter('[expanding-status=expanded]'), function(level) {
                     return $(level).children('.title').attr('url');
@@ -128,6 +157,12 @@ $(function() {
                         return !!url;
                     })
             )
+        });
+    }, 500);
+
+    var saveReadStatus = _.debounce(function _saveReadStatus() {
+        $.post(DATA_KEY.wiki, {
+            read: readStatus
         });
     }, 500);
 
