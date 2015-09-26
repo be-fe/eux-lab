@@ -27,47 +27,49 @@ $(function() {
     urlChanged();
 
     $sidebarWrapper
-        .on('click', '.title-content', function() {
+        .on('click', '.title-content', function clickTitleContent() {
             var $t = $(this).parent();
             console.log('url clicked : ', $t.attr('url'));
             location.hash = $t.attr('url');
         })
-        .on('focus', '#page-filter', function() {
+        .on('focus', '#page-filter', function focusOnPageFilter() {
             var $t = $(this);
 
             $t.parent().addClass('focused');
         })
-        .on('blur', '#page-filter', function() {
+        .on('blur', '#page-filter', function blurFromPageFilter() {
             var $t = $(this);
 
             $t.parent().removeClass('focused');
         })
 
-        .on('keyup', '#page-filter', _.debounce(function() {
+        .on('keyup', '#page-filter', _.debounce(function keyupForFiltering() {
             filterPages($(this).val());
+
+            scrollToLevel();
         }, 200))
 
-        .on('keydown', '#page-filter', function(e) {
+        .on('keydown', '#page-filter', function checkEscapeButton(e) {
             if (e.keyCode == 27) {
                 $(this).val('');
             }
         })
 
-        .on('mouseup', '#page-filter', function() {
+        .on('mouseup', '#page-filter', function mouseUpToClear() {
             $(this).select();
         })
 
-        .on('click', '.expanding-status', function() {
+        .on('click', '.expanding-status', function clickOnExpandingTwix() {
             toggleExpandingStatus($(this).parent().parent());
+            saveExpandingStatus();
         })
 
     ;
 
-    $sidebar.on('scroll', _.debounce(function() {
+    $sidebar.on('scroll', _.debounce(function onSidebarScroll() {
         var scrollTop = $sidebar.scrollTop();
         $pageFilterContainer.toggleClass('fixed', scrollTop != 0);
     }, 200));
-
 
     $levels.each(function() {
         var $level = $(this),
@@ -80,10 +82,54 @@ $(function() {
         $level.toggleClass('no-child', childrenLength == 0);
     });
 
-    $levels.filter('[level=2]').each(function() {
-        toggleExpandingStatus($(this), false);
-    });
+    $.get('/simple-data/wiki-status')
+        .done(function(data) {
+            if (data.expanded) {
+                $levels.filter('[level=1]').each(function() {
+                    toggleExpandingStatus($(this), false);
+                });
 
+                $levels.each(function() {
+                    var $level = $(this), url = $level.children('.title').attr('url');
+
+                    if (url in data.expanded) {
+                        toggleExpandingStatus($level, true);
+                    }
+                });
+
+                scrollToLevel();
+            } else {
+                $levels.filter('[level=2]').each(function() {
+                    toggleExpandingStatus($(this), false);
+                });
+            }
+        });
+
+    var scrollToLevel = function _scrollToLevel($level) {
+        $level = $level || $titles.filter('.selected').parent();
+        if (!$level.is(':visible')) {
+            return;
+        }
+
+        var scrollTop = $level.offset().top + $sidebar.scrollTop();
+
+        $sidebar.animate({
+            scrollTop: scrollTop - 100
+        }, 200);
+    };
+
+    var saveExpandingStatus = _.debounce(function _saveExpandingStatus() {
+        $.post('/simple-data/wiki-status', {
+            expanded: _.invert(
+                _.map($levels.filter('[expanding-status=expanded]'), function(level) {
+                    return $(level).children('.title').attr('url');
+                })
+                    .filter(function(url) {
+                        return !!url;
+                    })
+            )
+        });
+    }, 500);
 
     // expanding & collapsing
     function toggleExpandingStatus($level, expandingStatus) {

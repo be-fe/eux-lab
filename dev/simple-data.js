@@ -14,7 +14,11 @@ module.exports = {
     },
     read: function(req, res) {
         if (req.params.key) {
-            var data = JSON.parse(fs.readFileSync(config.dataFolders.simpleData + req.params.key + '.json'));
+            try {
+                var data = JSON.parse(fs.readFileSync(config.dataFolders.simpleData + req.params.key + '.json'));
+            } catch (ex) {
+                data = {};
+            }
         }
 
         res.json(data || {});
