@@ -22,16 +22,19 @@ $(function() {
             location.hash = 'page/eui-helper/index';
         }
         var url = decodeURIComponent(urlRaw);
+        readStatus[url] = 1;
+        saveReadStatus();
+
         // hash changed
         $titles
             .removeClass('selected')
             .filter('[url="' + urlRaw.split('"').join('\\"') + '"]')
-            .addClass('selected');
+            .addClass('selected')
+            .children('.read-status')
+            .addClass('read');
 
         $content.attr('src', url);
     };
-    $(window).on('hashchange', urlChanged);
-    urlChanged();
 
     $sidebarWrapper
         .on('click', '.title-content', function clickTitleContent() {
@@ -41,8 +44,6 @@ $(function() {
             var url = location.hash = $t.attr('url');
 
             $t.children('.read-status').addClass('read');
-            readStatus[url] = 1;
-            saveReadStatus();
         })
 
         .on('focus', '#page-filter', function focusOnPageFilter() {
@@ -259,4 +260,7 @@ $(function() {
             }
         }
     }
+
+    $(window).on('hashchange', urlChanged);
+    urlChanged();
 });
