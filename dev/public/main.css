@@ -44,14 +44,17 @@ body {
 .sidebar .level .title {
     margin: 10px 0;
 }
-.sidebar .level[level='0'] .title:hover {
-    color: #ff7c72;
-}
-.sidebar .level[level='1'] .level .title:hover {
+.sidebar .level .title-content:hover,
+.sidebar .level .expanding-status:hover .fa
+{
     color: #ff7c72;
 }
 .sidebar .level .title.selected  {
     color: #42b983;
+}
+
+.sidebar .level .title-content {
+    white-space: nowrap;
 }
 
 /* content & iframe */
@@ -72,17 +75,40 @@ body {
 
 /* expanding & collapsing */
 .expanding-status {
-    width: 18px;
+    width: 20px;
+    margin-right: 4px;
     text-align: center;
+    display: inline-block;
 }
 
-.expanding-status > .fa {
+.expanding-status .fa,
+.level.no-child > .title .expanding-status .fa {
     display: none;
+
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+    color: #999;
 }
+
+.level.no-child > .title .expanding-status .icon-none,
+.level[expanding-status=expanded] > .title .icon-down,
+.level[expanding-status=collapsed] > .title .icon-right {
+    display: inline-block;
+}
+
+.level.no-child > .title .expanding-status .icon-none {
+    font-size: 8px;
+    color: #ddd;
+    vertical-align: 2px;
+}
+
+.level[expanding-status=collapsed] > .children {
+    display: none;
+}
+
 
 /* page filtering */
 .page-filter-container {

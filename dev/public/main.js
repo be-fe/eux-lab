@@ -42,6 +42,10 @@ $(function() {
 
             $t.parent().removeClass('focused');
         })
+
+        .on('click', '.expanding-status', function() {
+            toggleExpandingStatus($(this).parent().parent());
+        })
     ;
 
     $sidebar.on('scroll', _.debounce(function() {
@@ -51,7 +55,36 @@ $(function() {
 
 
     $levels.each(function() {
-        var $level = $(this);
+        var $level = $(this),
+            $title = $level.children('.title'),
+            childrenLength = $level.children('.children').children().length;
+
+        $level.attr('expanding-status', childrenLength > 0 ?
+            'expanded' : 'collapsed');
+
+        $level.toggleClass('no-child', childrenLength == 0);
     });
 
+    $levels.filter('[level=2]').each(function() {
+        toggleExpandingStatus($(this), false);
+    });
+
+
+    // expanding & collapsing
+    function toggleExpandingStatus($level, expandingStatus) {
+
+        if (typeof expandingStatus == 'undefined') {
+            var currStatus = $level.attr('expanding-status') == 'expanded' ? 'collapsed' : 'expanded';
+        } else {
+            currStatus = expandingStatus ? 'expanded' : 'collapsed';
+        }
+
+        $level.attr('expanding-status', currStatus);
+
+        if (currStatus == 'collapsed') {
+            $level.children('.children').children().each(function() {
+                toggleExpandingStatus($(this), false);
+            });
+        }
+    }
 });
