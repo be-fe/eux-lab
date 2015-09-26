@@ -1,4 +1,5 @@
 get-started
+wiki-readme
 js-and-style
 all-shared-tpls
 test-markdown-page
