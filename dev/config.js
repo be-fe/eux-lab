@@ -1,3 +1,5 @@
+var fs = require('fs');
+
 var rgx = {
     orderTxt: /order\.txt$/,
     index: /\/index$/,
@@ -22,9 +24,17 @@ var rgx = {
     _empty_: ''
 };
 
+var dataFolders = {
+    eux: __dirname + '/../../__eux-lab-data/'
+};
+
+dataFolders.simpleData = dataFolders.eux + 'simple-data/';
+
 module.exports = {
     appName: 'acard',
     rgx: rgx,
     globalClass: 'acard',
-    port: 7788
+    port: 7788,
+
+    dataFolders: dataFolders
 };

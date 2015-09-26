@@ -47,6 +47,16 @@ $(function() {
             filterPages($(this).val());
         }, 200))
 
+        .on('keydown', '#page-filter', function(e) {
+            if (e.keyCode == 27) {
+                $(this).val('');
+            }
+        })
+
+        .on('mouseup', '#page-filter', function() {
+            $(this).select();
+        })
+
         .on('click', '.expanding-status', function() {
             toggleExpandingStatus($(this).parent().parent());
         })
@@ -156,7 +166,7 @@ $(function() {
             while ($level.length && !$level.hasClass('filtered')) {
                 $level.addClass('filtered');
                 toggleExpandingStatus($level, true);
-                
+
                 $level = $level.parent().parent('.level');
             }
         }
