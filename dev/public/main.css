@@ -161,3 +161,21 @@ body {
 .page-filter-container.fixed.focused {
     opacity: 1;
 }
+
+/* filtering */
+
+.filtering .level {
+    display: none;
+}
+
+.filtering .level.filtered {
+    display: block;
+}
+
+.filtering .level.filtered > .title {
+    opacity: 0.4;
+}
+
+.filtering .level.filtered.filtered-hit > .title {
+    opacity: 1;
+}

@@ -43,9 +43,14 @@ $(function() {
             $t.parent().removeClass('focused');
         })
 
+        .on('keyup', '#page-filter', _.debounce(function() {
+            filterPages($(this).val());
+        }, 200))
+
         .on('click', '.expanding-status', function() {
             toggleExpandingStatus($(this).parent().parent());
         })
+
     ;
 
     $sidebar.on('scroll', _.debounce(function() {
@@ -85,6 +90,75 @@ $(function() {
             $level.children('.children').children().each(function() {
                 toggleExpandingStatus($(this), false);
             });
+        }
+    }
+
+    // filtering page titles
+    function filterPages(termWords) {
+        $levels.removeClass('filtered filtered-hit');
+
+        var termLevels = termWords
+            .toLowerCase()
+            .split('>')
+            .map(function(termWord) {
+                return $.trim(termWord);
+            })
+            .filter(function(termWord) {
+                return !!termWord;
+            })
+            .map(function(termWord) {
+                return termWord.split(/\s+/g)
+                    .filter(function(term) {
+                        return !!term;
+                    });
+            });
+
+        if (termLevels.length) {
+            $levels.filter('[level=1]').each(function() {
+                filterTitle($(this));
+            });
+        }
+
+        $sidebarWrapper.toggleClass('filtering', !!termLevels.length);
+
+        // matching the term - terms are splitted by blank char(s)
+        function matchTerm(terms, titleText) {
+            return terms.every(function(term) {
+                if (titleText.indexOf(term) == -1) {
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        // filter the current $title
+        function filterTitle($level, termLevelIndex) {
+            termLevelIndex = termLevelIndex || 0;
+
+            var titleText = $level.children('.title').find('.title-content').text().toLowerCase();
+            if (matchTerm(termLevels[termLevelIndex], titleText)) {
+                if (termLevelIndex == termLevels.length - 1) {
+                    markHit($level);
+                } else {
+                    termLevelIndex ++;
+                }
+            }
+
+            $level.children('.children').children().each(function() {
+                filterTitle($(this), termLevelIndex);
+            });
+        }
+
+        // mark hit when a title is matched by the terms
+        function markHit($level) {
+            $level.addClass('filtered-hit');
+
+            while ($level.length && !$level.hasClass('filtered')) {
+                $level.addClass('filtered');
+                toggleExpandingStatus($level, true);
+                
+                $level = $level.parent().parent('.level');
+            }
         }
     }
 });
