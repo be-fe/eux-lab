@@ -121,7 +121,14 @@ var renderLevel = function (levelItems, levelIdx) {
         if (!item.title) return;
         html.push('<div class="level" level="' + levelIdx + '">');
         if (levelIdx) {
-            html.push('<div class="title" url="' + item.path.split('"').join('\\"') + '/index">' + escape(item.title) + '</div>');
+            html.push('<div class="title" url="' + item.path.split('"').join('\\"') + '/index">' +
+                '   <span class="expanding-status">' +
+                '       <span class="fa icon-down fa-caret-down"></span>' +
+                '       <span class="fa icon-right fa-caret-right"></span>' +
+                '       <span class="fa icon-none fa-circle"></span>' +
+                '   </span>' +
+                '<span class="title-content">' + escape(item.title) + '</span>' +
+                '</div>');
         }
         html.push('<div class="children">');
         html.push(renderLevel(item.children, levelIdx + 1));

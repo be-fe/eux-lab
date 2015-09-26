@@ -4,6 +4,7 @@
   "description": "有个卡片UI组件Demo平台",
   "main": "app.js",
   "dependencies": {
+    "body-parser": "^1.14.0",
     "chokidar": "^1.0.5",
     "express": "^4.13.3",
     "forever": "^0.15.1",

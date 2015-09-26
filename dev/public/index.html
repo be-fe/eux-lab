@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <script src="/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/vendor/lodash/lodash.js"></script>
     <script src="/main.js"></script>
     <link href="/main.css" type="text/css" rel="stylesheet">
+    <link href="/vendor/fontawesome/css/font-awesome.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-<div class="sidebar">
-    <div class="sidebar-content">
-        @@CONTENT_LIST@@
+<div class="sidebar-wrapper">
+    <div class="sidebar">
+        <div class="sidebar-content">
+            @@CONTENT_LIST@@
+        </div>
+    </div>
+    <div class="page-filter-container">
+        <input id="page-filter" placeholder="Filter pages &hellip;">
+        <span class="fa fa-filter"></span>
     </div>
 </div>
 <div class="content">
