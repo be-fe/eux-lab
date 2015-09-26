@@ -71,3 +71,25 @@ img {
     max-width: 400px;
     max-height: 600px;
 }
+
+[hash-key] {
+    position: absolute;
+    right: 20px;
+}
+
+[hash-key] input {
+    border: 1px #ccc solid;
+    outline: none;
+    border-radius: 2px;
+    padding: 2px 4px;
+    font-size: 12px;
+}
+
+[hash-key] {
+    opacity: 0.2;
+    font-size: 12px;
+}
+
+[hash-key]:hover {
+    opacity: 1;
+}

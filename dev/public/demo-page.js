@@ -499,9 +499,14 @@ var findBinds = function () {
 ;
 (function () {
     function initIndexHash() {
-
+        $('[hash-key]').each(function() {
+            var $hash = $(this);
+            $hash.html('page hash: <input>');
+            $hash.find('input').val($hash.attr('hash-key'));
+        }).on('mouseenter', function() {
+            $(this).find('input').select().focus();
+        });
     }
-
 
     $(function () {
         __isDocumentReady = true;
