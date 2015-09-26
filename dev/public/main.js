@@ -137,7 +137,9 @@ $(function() {
     var scrollToLevel = function _scrollToLevel($level) {
         $level = $level || $titles.filter('.selected').parent();
         if (!$level.is(':visible')) {
-            return;
+            $level.parents('.level').each(function() {
+                toggleExpandingStatus($(this), true);
+            });
         }
 
         var scrollTop = $level.offset().top + $sidebar.scrollTop();

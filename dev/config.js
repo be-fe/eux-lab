@@ -21,6 +21,9 @@ var rgx = {
 
     demoTag: /@(inline|iframe|page)(![^:]+)?:([^@]+)@/g,
 
+    indexMarkerSingle: /@#([^:]*):(\{[^}]+\})#@/,
+    indexMarkerRepeat: /@#([^:]*):(\{[^}]+\})#@/g,
+
     _empty_: ''
 };
 

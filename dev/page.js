@@ -4,6 +4,7 @@ var marked = require('marked');
 var less = require('less');
 var npath = require('path');
 var _ = require('lodash');
+var md5 = require('md5');
 
 var syncer = require('./syncer');
 var compiler = require('./compiler');
@@ -74,6 +75,17 @@ var page = function(req, res, next) {
         if (mdFile) {
             var mdContent = new String(fs.readFileSync(path + '/' + mdFile)).toString();
 
+            // 如果没有page的index标记, 则新建一个
+            var indexMatch = rgx.indexMarkerSingle.exec(mdContent);
+            if (!indexMatch) {
+                mdContent = '@#:{' + md5(Math.random()) + '}#@\n' + mdContent;
+                fs.writeFileSync(path + '/' + mdFile, mdContent);
+
+                console.log(mdContent);
+            } else {
+                console.log(indexMatch[0]);
+            }
+
             // process markdowns
             html = marked(mdContent);
 
@@ -117,6 +129,9 @@ var page = function(req, res, next) {
 
             paths = _.map(paths, function(__, path) {return path;});
             html = html.replace(/@\\(inline|iframe|page)/g, '@$1');
+
+            html = html.replace(rgx.indexMarkerRepeat, '<div index-keys="$1" hash-key="$2"></div>');
+
             if (paths.length) {
                 compiler.getDemo(paths, function (demo) {
                     html = html.replace('@@CSS@@', demo.css);

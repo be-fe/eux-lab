@@ -117,7 +117,7 @@ body {
     right: 0;
     font-size: 12px;
     color: #999;
-    opacity: 0.5;
+    opacity: 0.1;
     margin-top: 5px;
 
     transition: right 400ms, opacity 400ms, color 400ms;

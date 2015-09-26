@@ -6,7 +6,7 @@
 var IF_PRINT_TPL_DEBUG = false;
 
 var __binds = {};
-var __bind__  = function(path, func, tplOrStr, logic) {
+var __bind__ = function (path, func, tplOrStr, logic) {
     /**
      * logic: {}
      *  data: function
@@ -55,7 +55,8 @@ function extend(target, source, preventOverwrite) {
     return target;
 }
 
-;(function() {
+;
+(function () {
 
     function expandCompactObject(tplObj) {
         function setupObj(parts, val) {
@@ -182,7 +183,7 @@ function extend(target, source, preventOverwrite) {
             fn.__tpl_obj__ = tplObj;
             if ('data' in tplObj) {
                 fn.__data__ = {
-                    val:tplObj.data
+                    val: tplObj.data
                 }
             }
             context._this = fn;
@@ -242,14 +243,14 @@ function extend(target, source, preventOverwrite) {
     window.__tpl__ = compile;
 })();
 
-var requiredTpl = function() {
+var requiredTpl = function () {
     throw new Error('This context function is not yet speficied.');
 };
 var emptyTpl = _.noop;
 
 var allData = {};
 var globals = {};
-var tpl = function(tplObj, name) {
+var tpl = function (tplObj, name) {
 
     var fn = __tpl__(tplObj, name);
 
@@ -262,9 +263,9 @@ var tpl = function(tplObj, name) {
     return fn;
 };
 
-var compose = function(fn /* ... */) {
+var compose = function (fn /* ... */) {
     var fns = arguments;
-    return function() {
+    return function () {
         for (var i = 0; i < fns.length; i++) {
             if (typeof fns[i] == 'function') {
                 fns[i].apply(this, arguments);
@@ -275,7 +276,7 @@ var compose = function(fn /* ... */) {
 
 
 var __modules = {}, __tplCallbackObjs = [];
-var __tryRunQueue = function() {
+var __tryRunQueue = function () {
 
     while (__tplCallbackObjs.length) {
         var prevLen = __tplCallbackObjs.length;
@@ -300,12 +301,12 @@ var __tryRunQueue = function() {
     }
 };
 
-var __tryRunCallback = function(callbackObj, skipPush) {
+var __tryRunCallback = function (callbackObj, skipPush) {
     if (callbackObj.removed) {
         return;
     }
 
-    var moduleNotRegistered = callbackObj.modules.filter(function(module) {
+    var moduleNotRegistered = callbackObj.modules.filter(function (module) {
         return __modules[module] !== 'ready';
     });
 
@@ -316,7 +317,7 @@ var __tryRunCallback = function(callbackObj, skipPush) {
         if (!skipPush) {
             __tplCallbackObjs.push(callbackObj);
 
-            moduleNotRegistered.forEach(function(module) {
+            moduleNotRegistered.forEach(function (module) {
                 var fn = __modules[module];
 
                 if (typeof fn === 'function') {
@@ -327,11 +328,11 @@ var __tryRunCallback = function(callbackObj, skipPush) {
     }
 };
 
-var defineTpls = function(moduleName, callback) {
+var defineTpls = function (moduleName, callback) {
     if (__modules[moduleName]) {
         throw new Error('You should not register modules with a same name.');
     }
-    __modules[moduleName] = function() {
+    __modules[moduleName] = function () {
         __modules[moduleName] = 'holding';
         var callbackNumber = __tplCallbackObjs.length;
         callback();
@@ -353,8 +354,8 @@ var defineTpls = function(moduleName, callback) {
     }
 };
 
-var useTpls = function(modules, callback) {
-    modules.forEach(function(module) {
+var useTpls = function (modules, callback) {
+    modules.forEach(function (module) {
         if (!module) {
             throw new Error('Module name should be a valid string.');
         }
@@ -365,25 +366,26 @@ var useTpls = function(modules, callback) {
     })
 };
 
-var checkTplCallbacks = function() {
+var checkTplCallbacks = function () {
     if (__tplCallbackObjs.length) {
-        console.log(__tplCallbackObjs.map(function(callbackObjs) { return callbackObjs.modules.join(', ');}));
+        console.log(__tplCallbackObjs.map(function (callbackObjs) {
+            return callbackObjs.modules.join(', ');
+        }));
         throw new Error('The useTpls callback queue is not empty.');
     }
 };
 
-
 var __isDocumentReady = false;
-var findBinds = function() {
+var findBinds = function () {
     var rgxEventName = /^\s*(\w+)/g;
     if (!__isDocumentReady) return;
 
-    var renderDemoInfo = function($demoInfo) {
+    var renderDemoInfo = function ($demoInfo) {
         var $demoDoc = $demoInfo.prev().prev().prev().find('iframe').contents();
 
         var sections = [];
 
-        $demoDoc.find('[rendered-demo]').each(function() {
+        $demoDoc.find('[rendered-demo]').each(function () {
             var $rendered = $(this);
 
             sections.push({title: 'Demo DOM 结构', items: $demoDoc.find('body')});
@@ -398,14 +400,14 @@ var findBinds = function() {
         })
     };
 
-    $('[demo-info]').each(function() {
+    $('[demo-info]').each(function () {
         var $demoInfoToggle = $(this);
 
-        useTpls([shares.demoInfo], function() {
+        useTpls([shares.demoInfo], function () {
             var toggleTpl = globals.demoInfoToggle;
             $demoInfoToggle.append(toggleTpl());
 
-            $demoInfoToggle.on('click', 'a', function() {
+            $demoInfoToggle.on('click', 'a', function () {
                 var $demoInfo = $demoInfoToggle.next('.-demo-info');
                 if ($demoInfo.length) {
                     $demoInfoToggle.html(toggleTpl({'linkText': '展现'}));
@@ -421,7 +423,7 @@ var findBinds = function() {
         });
     });
 
-    $('[demo]').each(function() {
+    $('[demo]').each(function () {
         var $demo = $(this);
 
         var demo = $demo.attr('demo'), func = $demo.attr('func');
@@ -449,7 +451,7 @@ var findBinds = function() {
             // assign the $ & $_ shortcuts
             var demoContext = {
                 $_: $demo,
-                $: function(selector) {
+                $: function (selector) {
                     return $demo.find(selector);
                 },
                 d: data,
@@ -458,9 +460,9 @@ var findBinds = function() {
 
             // init the elems based on the selector settings
             if (demoIniter.logic.sel) {
-                _.each(demoIniter.logic.sel, function(selector, key) {
+                _.each(demoIniter.logic.sel, function (selector, key) {
                     if (selector.substr(0, 1) == '!') {
-                        demoContext.$[key] = function() {
+                        demoContext.$[key] = function () {
                             return $demo.find(selector.substr(1));
                         }
                     } else {
@@ -474,11 +476,11 @@ var findBinds = function() {
 
             // init events
             if (demoIniter.logic.event) {
-                _.each(demoIniter.logic.event, function(func, eventKey) {
+                _.each(demoIniter.logic.event, function (func, eventKey) {
                     var eventNameMatch = rgxEventName.exec(eventKey);
                     if (eventNameMatch) {
                         var eventName = eventNameMatch[1];
-                        $demo.on(eventName, eventKey.replace(rgxEventName, ''), function(e) {
+                        $demo.on(eventName, eventKey.replace(rgxEventName, ''), function (e) {
                             demoContext.$t = $(e.target);
                             func.bind(this)(e, demoContext);
                         });
@@ -494,8 +496,17 @@ var findBinds = function() {
     });
 };
 
-$(function() {
-    __isDocumentReady = true;
-    checkTplCallbacks();
-    findBinds();
-});
+;
+(function () {
+    function initIndexHash() {
+
+    }
+
+
+    $(function () {
+        __isDocumentReady = true;
+        checkTplCallbacks();
+        findBinds();
+        initIndexHash();
+    });
+})();
