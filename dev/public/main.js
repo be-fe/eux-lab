@@ -57,9 +57,14 @@ $(function() {
         })
 
         .on('keyup', '#page-filter', _.debounce(function keyupForFiltering() {
-            filterPages($(this).val());
+            var $t = $(this);
+            var oldValue = $t.data('old-value'), currValue = $t.val();
+            if (oldValue != currValue) {
+                $t.data('old-value', currValue);
+                filterPages(currValue);
 
-            scrollToLevel();
+                scrollToLevel();
+            }
         }, 200))
         .on('keydown', '#page-filter', function checkEscapeButton(e) {
             if (e.keyCode == 27) {
