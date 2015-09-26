@@ -78,7 +78,7 @@ var page = function(req, res, next) {
             // 如果没有page的index标记, 则新建一个
             var indexMatch = rgx.indexMarkerSingle.exec(mdContent);
             if (!indexMatch) {
-                mdContent = '@#:{' + md5(Math.random()) + '}#@\n' + mdContent;
+                mdContent = '@#:{' + md5(Math.random()) + '}#@\n\n\n' + mdContent;
                 fs.writeFileSync(path + '/' + mdFile, mdContent);
 
                 console.log(mdContent);
