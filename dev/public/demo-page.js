@@ -404,7 +404,6 @@ require(['/page/_share/wiki-related/demo-info.demo.js'], function () {
 
     $(function () {
         __isDocumentReady = true;
-        checkTplCallbacks();
         findBinds();
         initIndexHash();
     });

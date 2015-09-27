@@ -299,13 +299,8 @@ var compileJs = function (res, isShareJs, noCacheCheck) {
 
     compiled = compiled.replace(/\$\$PATH\$\$/g, JSON.stringify(res.path.replace(rgx.demo, '')));
 
-    if (isShareJs) {
-        compiled = compiled.replace('$$CLOSURE_START$$', 'defineTpls(' + stringifiedBase + ',function() {');
-        compiled = compiled.replace('$$CLOSURE_END$$', '});');
-    } else {
-        compiled = compiled.replace('$$CLOSURE_START$$', ';(function() {');
-        compiled = compiled.replace('$$CLOSURE_END$$', '})();');
-    }
+    compiled = compiled.replace('$$CLOSURE_START$$', ';(function() {');
+    compiled = compiled.replace('$$CLOSURE_END$$', '})();');
 
     var locals = [];
     var scripts = [];
