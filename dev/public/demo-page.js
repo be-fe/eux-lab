@@ -267,47 +267,6 @@ var findBinds = function () {
     var rgxEventName = /^\s*(\w+)/g;
     if (!__isDocumentReady) return;
 
-    var renderDemoInfo = function ($demoInfo) {
-        var $demoDoc = $demoInfo.prev().prev().prev().find('iframe').contents();
-
-        var sections = [];
-
-        $demoDoc.find('[rendered-demo]').each(function () {
-            var $rendered = $(this);
-
-            sections.push({title: 'Demo DOM 结构', items: $demoDoc.find('body')});
-            if ($rendered[0].tpl.__tpl_obj__) {
-                sections.push({title: 'Demo 模板结构', items: $rendered[0].tpl.__tpl_obj__});
-            }
-        });
-
-        globals.demoRenderInfo({
-            $container: $demoInfo,
-            sections: sections
-        })
-    };
-
-    $('[demo-info]').each(function () {
-        var $demoInfoToggle = $(this);
-
-        var toggleTpl = globals.demoInfoToggle;
-        $demoInfoToggle.append(toggleTpl());
-
-        $demoInfoToggle.on('click', 'a', function () {
-            var $demoInfo = $demoInfoToggle.next('.-demo-info');
-            if ($demoInfo.length) {
-                $demoInfoToggle.html(toggleTpl({'linkText': '展现'}));
-                $demoInfo.remove();
-            } else {
-                $demoInfoToggle.html(toggleTpl({'linkText': '收缩'}));
-                $demoInfo = $(globals.demoInfo());
-                $demoInfoToggle.after($demoInfo);
-
-                renderDemoInfo($demoInfo);
-            }
-        });
-    });
-
     $('[demo]').each(function () {
         var $demo = $(this);
 
@@ -381,6 +340,52 @@ var findBinds = function () {
     });
 };
 
+var setupDemoToggleTrigger = function() {
+
+    var renderDemoInfo = function ($demoInfo) {
+        var $demoDoc = $demoInfo.prev().prev().prev().find('iframe').contents();
+
+        var sections = [];
+
+        $demoDoc.find('[rendered-demo]').each(function () {
+            var $rendered = $(this);
+
+            sections.push({title: 'Demo DOM 结构', items: $demoDoc.find('body')});
+            if ($rendered[0].tpl.__tpl_obj__) {
+                sections.push({title: 'Demo 模板结构', items: $rendered[0].tpl.__tpl_obj__});
+            }
+        });
+
+        globals.demoRenderInfo({
+            $container: $demoInfo,
+            sections: sections
+        })
+    };
+
+    $('[demo-info]').each(function () {
+        var $demoInfoToggle = $(this);
+
+        var toggleTpl = globals.demoInfoToggle;
+        $demoInfoToggle.append(toggleTpl());
+
+        $demoInfoToggle.on('click', 'a', function () {
+            var $demoInfo = $demoInfoToggle.next('.-demo-info');
+            if ($demoInfo.length) {
+                $demoInfoToggle.html(toggleTpl({'linkText': '展现'}));
+                $demoInfo.remove();
+            } else {
+                $demoInfoToggle.html(toggleTpl({'linkText': '收缩'}));
+                $demoInfo = $(globals.demoInfo());
+                $demoInfoToggle.after($demoInfo);
+
+                renderDemoInfo($demoInfo);
+            }
+        });
+
+        $demoInfoToggle.removeAttr('demo-info');
+    });
+};
+
 var addDemoStyle = function (style) {
     if (!style) return;
 
@@ -405,6 +410,7 @@ require(['/page/_share/wiki-related/demo-info.demo.js'], function () {
     $(function () {
         __isDocumentReady = true;
         findBinds();
+        setupDemoToggleTrigger();
         initIndexHash();
     });
 })

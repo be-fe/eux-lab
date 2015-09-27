@@ -9,23 +9,21 @@
 * html
 * 简单逻辑
 
-中间很多demo之间复用的部分, 我们可以把它们抽取出来, 变成demo的公用组件. 通过这么做, 构建下一个页面时可以达到一个很高的效率.
 
-** !!! 再次强调: 改动公用组件或样式时, 要小心, 因为可能影响到所有其他的页面 !!! **
+## 公用样式
+如果有很多demo都复用了某些样式, 那么可以考虑把它们抽取出来, 变成demo的公用样式.
 
-其中, 样式可以存放在:
+** !!! 再次强调: 改动公用样式时, 要小心, 因为可能影响到所有其他的页面 !!! **
+
+公用样式可以存放在一下两类文件中:
 
     *.public.less   // 编译至 build/public.css, 可以考虑直接在产品中使用
     *.private.less  // 编译至 build/private.css, 只存放在wiki中使用的专用样式
-    
 
-另外的html, 简单逻辑被封装在:
-   
-    *.share.html 
     
-## *.share.html
+## *.demo.html
 
-`*.share.html` 中存放公有的demo组件, 其格式为:
+`*.demo.html` 中存放demo组件, 其格式为:
 
     ---templateHtml
     // some template
@@ -34,16 +32,17 @@
     // some other template
     
     <script>
-    // some script here
-    
-    // 注意, "---template" 类的模板, 只能在同一个 `*.share.html` 下才能看到.
-    locals.templateHtml         // 引用相应d饿模板
-    locals.anotherTemplate      // 引用相应的模板
+    // 注意, 每一个demo组件里, 只能至多有一个匿名的`define()`调用.
+    define([], function() {
+        // 注意, "---template" 类的模板, 只能在同一个 `*.share.html` 下才能看到.
+        locals.templateHtml         // 引用相应d饿模板
+        locals.anotherTemplate      // 引用相应的模板
+    });
     </script>
     
 ### &lt;script>定义
 
-所有js逻辑都可以wrap在 `<script></script>` 之中, wiki中引入almond.js, 所以可以用require的AMD风格来组织组件的依赖.
+所有js逻辑都可以wrap在最后的`<script></script>` 中. 另外, eux-lab中引入require.js, 所以可以利用require的AMD方式来组织组件的依赖.
 
 ## tpl模板编译方法
 
@@ -68,7 +67,7 @@
 
 ### html 原始template
 
-`---button` 开始一个原始的html template, 它的名字为 `button`, 可以用 `tpl('button')` 来将其编译.
+上面的例子里, `---button` 定义了一个原始的html template, 它的名字为 `button`, 可以用 `locals.button` 来引用它.
 
 原始template的格式遵循 lodash 的template格式, 详细的文档可以参照 [lodash template](https://lodash.com/docs#template)
 
@@ -155,7 +154,7 @@ var tpl({
         
         return d.title + ' ' + childrenText;
     },
-    d: {
+    data: {
         title: 'item1',
         children: [
             {title: 'item 2'}, 

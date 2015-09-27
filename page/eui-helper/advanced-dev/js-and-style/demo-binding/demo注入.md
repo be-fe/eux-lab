@@ -3,16 +3,13 @@
 
 ## demo的准备
 
-我们的最终目标是将demo展现出来. demo实例的存放位置主要在:
+我们的最终目标是将demo展现出来. 每一个demo实例的存放位置主要在:
 
     // html和逻辑
     *.demo.html
     
     // 存放样式
     *.demo.less
-
-`*.demo.html` 的格式跟demo组件中的 `*.share.html` 是一样的. demo注入与demo组件的区别是, 所有demo注入的资源, 只会注入到相应的页面中, 
-不会影响到其它的页面.   
 
 同时, 在wiki页面上, 你需要指定好demo注入的位置, 例如:
 
@@ -24,10 +21,13 @@
 接下来我们看一个demo
 @\inline: some demo@ <--- 在wiki页面中, 这里相应的位置, 将会被 name=some demo 的demo所代替.
 ```
+
+*小窍门: 你可以在页面加入demo的注入定义, 如: `@\inline: inline-demo@`, 然后刷新该页面, 如果这么做, 那么如果 `inline-demo.demo.html`
+还没被创建的话, 那么程序会自动在相应的位置创建 `inline-demo.demo.html` 和 `inline-demo.demo.less` 两个文件, 十分方便.*
     
 ## demo注入指定    
 
-demo只属于所在文件夹的wiki页面 (你无法跨页面的访问注入式demo, 如果需要共用资源, 考虑用demo组件的方式)
+demo只属于所在文件夹的wiki页面 (正常情况下, 跨页面的访问注入式demo不会影响其他页面. 但是你可能很容易的用require的方式来引用.)
 
 所有同页面上的demo用两个部分来标识 (可理解为demo的id): `name` 和 `func`
 `name` 和 `func` 利用 `/` 来分割开来, 例如:
@@ -78,7 +78,7 @@ bind('', demoTpl, {
 
 ### bindLogic.sel
 
-`bindLogic.sel` 是一个帮助快速生产jquery对象的手段. 他为最终的 `init` 方法, 以及`event`的事件回调提供了demoContext的对象.
+`bindLogic.sel` 是一个帮助快速生产jquery对象的手段. 它为最终的 `init` 方法, 以及`event`的事件回调提供了demoContext的对象.
 
 例如:
 
