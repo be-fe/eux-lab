@@ -121,7 +121,7 @@ var page = function(req, res, next) {
                     paths[demoPath] = 1;
                 } else if (type == 'iframe') {
                     content =
-                        "<div><iframe class='-demo-inline -demo-inline-" + iframeProfile + "' src='" + url + "'></iframe></div>"
+                        "<div><iframe class='-demo-iframe -demo-iframe-" + iframeProfile + "' src='" + url + "'></iframe></div>"
                         + pageDemo
                         + "<div demo-info></div>";
                 } else {

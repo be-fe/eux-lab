@@ -2,13 +2,13 @@
 <div>hello world</div>
 
 <script>
-    bind('default', locals.float, {
-        init: function(c) {
+    require([], function(hello) {
 
-        }
-    });
+        bind('default', locals.float, {
+            init: function(c) {
 
-    require(['./test-global'], function(hello) {
-        console.log(globals.helloTpl());
+            }
+        });
+
     });
 </script>

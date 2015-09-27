@@ -49,7 +49,7 @@ inline, iframe, page 分别代表三种不同的demo嵌入方式.
 
 * inline是将demo直接嵌入到页面中.
 * iframe将demo嵌入到页面, 但是用iframe作为外层包裹起来.
-    * iframe之后的 !default 是可选项. 它将被拼接成iframe的一个class `-demo-inline-default`.
+    * iframe之后的 !default 是可选项. 它将被拼接成iframe的一个class `-demo-iframe-default`.
         利用它, 你可以使用其他的class, 同时在`*.private.less`给iframe一个新的样式.
         往往比较常用的是改变iframe容器的长和高.
 * page不嵌入demo, 而是提供一个跳转到该demo的连接.
