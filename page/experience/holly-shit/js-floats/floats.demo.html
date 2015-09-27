@@ -11,5 +11,9 @@
         init: function(c) {
 
         }
-    })
+    });
+
+    require(['./test-global'], function(hello) {
+        console.log(globals.helloTpl());
+    });
 </script>
