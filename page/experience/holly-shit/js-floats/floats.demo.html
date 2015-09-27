@@ -1,19 +1,12 @@
----printAll
-<div>
-    <%= d.prints %>
-</div>
-
----print
-<div><%- d.val %></div>
+---float
+<div>hello world</div>
 
 <script>
-    bind('', emptyTpl, {
+    bind('default', locals.float, {
         init: function(c) {
 
         }
     });
-
-//    define([], function() {});
 
     require(['./test-global'], function(hello) {
         console.log(globals.helloTpl());

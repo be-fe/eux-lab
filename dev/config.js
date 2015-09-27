@@ -20,7 +20,7 @@ var rgx = {
 
     demoPage: /\.demo$/,
 
-    demoTag: /@(inline|iframe|page)(![^:]+)?:([^@]+)@/g,
+    demoTag: /@(inline|iframe|page)(![^:.]+)?(\.[^:]+)?:([^@]+)@/g,
 
     indexMarkerSingle: /@#([^:]*):(\{[^}]+\})#@/,
     indexMarkerRepeat: /@#([^:]*):(\{[^}]+\})#@/g,
@@ -35,9 +35,9 @@ var dataFolders = {
 dataFolders.simpleData = dataFolders.eux + 'simple-data/';
 
 module.exports = {
-    appName: 'acard',
+    appName: 'eux-lab',
     rgx: rgx,
-    globalClass: 'acard',
+    globalClass: 'eux-lab-demo-page',
     port: 7788,
 
     dataFolders: dataFolders

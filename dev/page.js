@@ -81,9 +81,9 @@ var page = function(req, res, next) {
                 mdContent = '@#:{' + md5(Math.random()) + '}#@\n\n\n' + mdContent;
                 fs.writeFileSync(path + '/' + mdFile, mdContent);
 
-                console.log(mdContent);
+                //console.log(mdContent); //@test
             } else {
-                console.log(indexMatch[0]);
+                //console.log(indexMatch[0]); //@test
             }
 
             // process markdowns
@@ -93,9 +93,12 @@ var page = function(req, res, next) {
             html = fs.readFileSync(__dirname + '/templates/page.template.html').toString().replace('@@CONTENT@@', html);
             var paths = {};
 
-            html = html.replace(rgx.demoTag, function(__, type, iframeProfile, fullName) {
+            html = html.replace(rgx.demoTag, function(__, type, iframeProfile, bodyClass, fullName) {
                 iframeProfile = iframeProfile || '!default';
+                bodyClass = bodyClass || '.' + config.globalClass;
+
                 iframeProfile = trim(iframeProfile.substr(1));
+                bodyClass = trim(bodyClass.substr(1));
 
                 var parts = fullName.split('/');
                 var name = trim(parts[0]);
@@ -106,7 +109,7 @@ var page = function(req, res, next) {
 
                 ensureFiles(path, name);
                 var demoPath = path + '/' + name;
-                var url = '/' + path.split('"').join('\\""') + '/' + name.split('"').join('\\"') + '.demo' + '?func=' + func;
+                var url = '/' + path.split('"').join('\\""') + '/' + name.split('"').join('\\"') + '.demo' + '?func=' + func + '&bodyClass=' + bodyClass ;
 
                 var pageDemo = '<div><a class="-demo-page-link" '
                     + 'href="' + url
@@ -153,7 +156,7 @@ var page = function(req, res, next) {
         var demoPath = path.replace(rgx.demoPage, '');
         var name = npath.basename(demoPath);
         compiler.getDemo([demoPath], function(demo) {
-            html = html.replace('@@CLASS@@', urlObject.query.bodyClass || config.globalClass);
+            html = html.replace('@@CLASS@@', req.query.bodyClass || config.globalClass);
             html = html.replace('@@JS@@', 'require(["/' + demoPath + '.demo.js"], function() {});');
             html = html.replace('@@CONTENT@@', "<div demo=" + JSON.stringify(demoPath) + " func='" + req.query.func + "'></div>");
 

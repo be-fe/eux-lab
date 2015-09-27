@@ -7,7 +7,7 @@
 
 立马在 Chrome 中尝试错误的例子, 果不其然, 这种酸爽...
 
-@iframe!medium: floats/default@
+@iframe!medium.float-page: floats/default@
 
 @inline: test2@
 
