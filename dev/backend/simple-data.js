@@ -1,10 +1,9 @@
 var fs = require('fs');
 var _ = require('lodash');
 
-var config = require('./config');
-var utils = require('./utils');
+var utils = require(__dirname + '../../utils');
 
-utils.ensurePath(config.dataFolders.simpleData);
+var config;
 
 var simpleData = {
     write: function(req, res) {
@@ -30,6 +29,12 @@ var simpleData = {
     },
     read: function(req, res) {
         res.json(simpleData._read(req.params.key));
+    },
+    setup: function(app, _config) {
+        config = _config;
+        utils.ensurePath(config.dataFolders.simpleData);
+        app.post(config.backendBase + '/simple-data/:key', simpleData.write);
+        app.get(config.backendBase + '/simple-data/:key', simpleData.read);
     }
 };
 

@@ -1,7 +1,7 @@
 $(function() {
 
     var DATA_KEY = {
-        wiki: '/simple-data/wiki-status'
+        wiki: '/backend/simple-data/wiki-status'
     };
 
     var $content = $('iframe');

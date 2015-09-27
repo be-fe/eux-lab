@@ -40,5 +40,7 @@ module.exports = {
     globalClass: 'eux-lab-demo-page',
     port: 7788,
 
+    backendBase: '/backend',
+
     dataFolders: dataFolders
 };

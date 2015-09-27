@@ -5,7 +5,7 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 
 var config = require('./dev/config');
-var simpleData = require('./dev/simple-data');
+var simpleData = require('./dev/backend/simple-data');
 var syncer = require('./dev/syncer');
 var compiler = require('./dev/compiler');
 var page = require('./dev/page');
@@ -32,11 +32,11 @@ var getIndexPage = function(req, res, next) {
     content = content.replace('@@CONTENT_LIST@@', syncer.renderLevel());
     res.end(content);
 };
+
+require('./dev/backend/backend-modules.js').setup(app, config);
+
 app.get('/', getIndexPage);
 app.get('/index.html', getIndexPage);
-
-app.post('/simple-data/:key', simpleData.write);
-app.get('/simple-data/:key', simpleData.read);
 
 app.get('/page/**', page.page);
 app.use(st({
