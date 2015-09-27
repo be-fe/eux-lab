@@ -3,7 +3,7 @@
 
 
 <script>
-    useTpls([shares.demo], function(demoTpl) {
+    define(['./demo-share.demo.js'], function(demoTpl) {
         bind('', tpl({
             _: locals.demoTemplate,
             data: {

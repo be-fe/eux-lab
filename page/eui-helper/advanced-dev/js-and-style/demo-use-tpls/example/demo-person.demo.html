@@ -1,21 +1,40 @@
+---person
+<div>
+    <p>name: <span><%- d.name %><span></p>
+
+    <p>age: <span><%- d.age %></span></p>
+
+    <div class='controls'>
+        <%= c.button() %>
+    </div>
+</div>
+
+<script>
+</script>
 
 ---pageBody
 <div class="page-content">
     <h1>Persons</h1>
+
     <div class="person-list">
         <%= c.personList(d.persons) %>
     </div>
 </div>
 
 <script>
-    useTpls([shares.demoPerson], function() {
+    define(['./demo-button.demo.js'], function () {
+        tpl({
+            _: locals.person,
+            button: globals.demoButton
+        }, 'demoPerson');
+
         var pageTpl = tpl({
             _: locals.pageBody,
             personList: {
-                _: function(persons, c) {
+                _: function (persons, c) {
                     var html = [];
 
-                    persons.forEach(function(person) {
+                    persons.forEach(function (person) {
                         html.push(c.person(person));
                     });
 
@@ -34,8 +53,7 @@
         });
 
 
-        bind('demo-person', pageTpl);
+        bind('demo', pageTpl);
     });
-
 
 </script>

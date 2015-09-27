@@ -248,7 +248,6 @@ var requiredTpl = function () {
 };
 var emptyTpl = _.noop;
 
-var allData = {};
 var globals = {};
 var tpl = function (tplObj, name) {
 
@@ -261,118 +260,6 @@ var tpl = function (tplObj, name) {
         globals[name] = fn;
     }
     return fn;
-};
-
-var compose = function (fn /* ... */) {
-    var fns = arguments;
-    return function () {
-        for (var i = 0; i < fns.length; i++) {
-            if (typeof fns[i] == 'function') {
-                fns[i].apply(this, arguments);
-            }
-        }
-    }
-};
-
-
-var __modules = {}, __tplCallbackObjs = [];
-var __tryRunQueue = function () {
-
-    while (__tplCallbackObjs.length) {
-        var prevLen = __tplCallbackObjs.length;
-        for (var i = __tplCallbackObjs.length; i-- > 0;) {
-            var callbackObj = __tplCallbackObjs[i];
-            __tryRunCallback(callbackObj, true);
-            if (callbackObj.removed) {
-                __tplCallbackObjs.splice(i, 1);
-            }
-        }
-
-        for (var module in __modules) {
-            var status = __modules[module];
-            if (status == 'pending') {
-                __modules[module] = 'ready';
-            }
-        }
-
-        if (prevLen == __tplCallbackObjs.length) {
-            break;
-        }
-    }
-};
-
-var __tryRunCallback = function (callbackObj, skipPush) {
-    if (callbackObj.removed) {
-        return;
-    }
-
-    var moduleNotRegistered = callbackObj.modules.filter(function (module) {
-        return __modules[module] !== 'ready';
-    });
-
-    if (!moduleNotRegistered.length) {
-        callbackObj.removed = true;
-        callbackObj.callback();
-    } else {
-        if (!skipPush) {
-            __tplCallbackObjs.push(callbackObj);
-
-            moduleNotRegistered.forEach(function (module) {
-                var fn = __modules[module];
-
-                if (typeof fn === 'function') {
-                    fn();
-                }
-            });
-        }
-    }
-};
-
-var defineTpls = function (moduleName, callback) {
-    if (__modules[moduleName]) {
-        throw new Error('You should not register modules with a same name.');
-    }
-    __modules[moduleName] = function () {
-        __modules[moduleName] = 'holding';
-        var callbackNumber = __tplCallbackObjs.length;
-        callback();
-        if (callbackNumber == __tplCallbackObjs.length) {
-            __modules[moduleName] = 'ready';
-            __tryRunQueue();
-            __tplCallbackObjs = __tplCallbackObjs.filter(function (callbackObj) {
-                return !callbackObj.removed;
-            });
-        } else {
-            var modules = [];
-            for (var i = callbackNumber; i < __tplCallbackObjs.length; i++) {
-                modules = _.union(modules, __tplCallbackObjs[i].modules);
-            }
-            useTpls(modules, function () {
-                __modules[moduleName] = 'pending';
-            });
-        }
-    }
-};
-
-var useTpls = function (modules, callback) {
-    modules.forEach(function (module) {
-        if (!module) {
-            throw new Error('Module name should be a valid string.');
-        }
-    });
-    __tryRunCallback({
-        modules: modules,
-        callback: callback
-    })
-};
-
-var checkTplCallbacks = function () {
-    if (__tplCallbackObjs.length) {
-        console.log(__tplCallbackObjs.map(function (callbackObjs) {
-            return callbackObjs.modules.join(', ');
-        }));
-        throw new Error('The useTpls callback queue is not empty.');
-    }
 };
 
 var __isDocumentReady = false;
@@ -403,23 +290,21 @@ var findBinds = function () {
     $('[demo-info]').each(function () {
         var $demoInfoToggle = $(this);
 
-        useTpls([shares.demoInfo], function () {
-            var toggleTpl = globals.demoInfoToggle;
-            $demoInfoToggle.append(toggleTpl());
+        var toggleTpl = globals.demoInfoToggle;
+        $demoInfoToggle.append(toggleTpl());
 
-            $demoInfoToggle.on('click', 'a', function () {
-                var $demoInfo = $demoInfoToggle.next('.-demo-info');
-                if ($demoInfo.length) {
-                    $demoInfoToggle.html(toggleTpl({'linkText': '展现'}));
-                    $demoInfo.remove();
-                } else {
-                    $demoInfoToggle.html(toggleTpl({'linkText': '收缩'}));
-                    $demoInfo = $(globals.demoInfo());
-                    $demoInfoToggle.after($demoInfo);
+        $demoInfoToggle.on('click', 'a', function () {
+            var $demoInfo = $demoInfoToggle.next('.-demo-info');
+            if ($demoInfo.length) {
+                $demoInfoToggle.html(toggleTpl({'linkText': '展现'}));
+                $demoInfo.remove();
+            } else {
+                $demoInfoToggle.html(toggleTpl({'linkText': '收缩'}));
+                $demoInfo = $(globals.demoInfo());
+                $demoInfoToggle.after($demoInfo);
 
-                    renderDemoInfo($demoInfo);
-                }
-            });
+                renderDemoInfo($demoInfo);
+            }
         });
     });
 
@@ -497,6 +382,8 @@ var findBinds = function () {
 };
 
 var addDemoStyle = function (style) {
+    if (!style) return;
+
     var $style = $('#demo-styles');
     if (!$style.length) {
         $style = $('<style id="demo-styles"></style>').appendTo(document.head);
@@ -504,8 +391,7 @@ var addDemoStyle = function (style) {
     $style.append(style + '\n');
 };
 
-;
-(function () {
+require(['/page/_share/wiki-related/demo-info.demo.js'], function () {
     function initIndexHash() {
         $('[hash-key]').each(function () {
             var $hash = $(this);
@@ -522,4 +408,4 @@ var addDemoStyle = function (style) {
         findBinds();
         initIndexHash();
     });
-})();
+})
