@@ -1,5 +1,6 @@
 ;(function() {
-    define([], function() {
+
+    define(['test2.demo.js'], function(test2) {
 
         tpl({
             _: function(d, c) {
@@ -15,8 +16,11 @@
             }
         }, 'helloTpl');
 
+        test2.sayHi('test2');
+
         return {
             hello: 'world'
         }
     });
+
 })();

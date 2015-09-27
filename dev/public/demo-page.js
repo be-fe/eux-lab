@@ -496,14 +496,22 @@ var findBinds = function () {
     });
 };
 
+var addDemoStyle = function (style) {
+    var $style = $('#demo-styles');
+    if (!$style.length) {
+        $style = $('<style id="demo-styles"></style>').appendTo(document.head);
+    }
+    $style.append(style + '\n');
+};
+
 ;
 (function () {
     function initIndexHash() {
-        $('[hash-key]').each(function() {
+        $('[hash-key]').each(function () {
             var $hash = $(this);
             $hash.html('page hash: <input>');
             $hash.find('input').val($hash.attr('hash-key'));
-        }).on('mouseenter', function() {
+        }).on('mouseenter', function () {
             $(this).find('input').select().focus();
         });
     }

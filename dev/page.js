@@ -135,7 +135,9 @@ var page = function(req, res, next) {
             if (paths.length) {
                 compiler.getDemo(paths, function (demo) {
                     html = html.replace('@@CSS@@', demo.css);
-                    html = html.replace('@@JS@@', demo.js);
+                    html = html.replace('@@JS@@', paths.map(function(path) {
+                        return 'require(["/' + path + '.demo.js"], function() {});';
+                    }).join('\n'));
 
                     res.end(html);
                 });
@@ -144,20 +146,26 @@ var page = function(req, res, next) {
                 html = html.replace('@@JS@@', '');
                 res.end(html);
             }
-            //console.log(html); // @test
-            return;
         }
+        return;
     } else if (rgx.demoPage.exec(path) && fs.existsSync(path + '.html')) {
         html = fs.readFileSync(__dirname + '/templates/demo-page.template.html').toString();
         var demoPath = path.replace(rgx.demoPage, '');
         var name = npath.basename(demoPath);
         compiler.getDemo([demoPath], function(demo) {
-            html = html.replace('@@CLASS@@', config.globalClass);
-            html = html.replace('@@CSS@@', demo.css);
-            html = html.replace('@@JS@@', demo.js);
+            html = html.replace('@@CLASS@@', urlObject.query.bodyClass || config.globalClass);
+            html = html.replace('@@JS@@', 'require(["/' + demoPath + '.demo.js"], function() {});');
             html = html.replace('@@CONTENT@@', "<div demo=" + JSON.stringify(demoPath) + " func='" + req.query.func + "'></div>");
 
             res.end(html);
+        });
+        return;
+    } else if (rgx.demoJs.exec(path)) {
+        var demoPath = path.replace(rgx.demoJs, '');
+        var name = npath.basename(demoPath);
+
+        compiler.getDemoJs([demoPath], function(demoJs) {
+            res.end(demoJs);
         });
         return;
     }

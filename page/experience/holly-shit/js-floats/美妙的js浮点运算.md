@@ -9,3 +9,5 @@
 
 @iframe!medium: floats/default@
 
+@inline: test2@
+

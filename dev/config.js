@@ -13,6 +13,7 @@ var rgx = {
     demo: /\.demo\.html$/,
     share: /\.share\.html$/,
     demoLess: /\.demo\.less$/,
+    demoJs: /\.demo\.js$/,
     publicLess: /\.public\.less$/,
     privateLess: /\.private\.less$/,
     commonLess: /\.common\.less$/,
