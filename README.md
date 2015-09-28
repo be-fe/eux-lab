@@ -27,7 +27,7 @@ bower install
 
 **如果npm安装出错, 请参照上面的方法来解决**
 
-最后, 执行一下命令运行wiki, wiki页面在运行后会自动打开 (windows可能会有点小问题) 
+最后, 执行以下命令运行wiki, wiki页面在运行后会自动打开 (windows可能会有点小问题) 
 
 ```
 gulp 
