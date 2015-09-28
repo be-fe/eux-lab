@@ -1,5 +1,6 @@
 ### EUX Lab wiki get started
 
+#### 安装node
 如果没有node, 先请安装node, 同时, 确保以下的node插件可用
 
 ```
@@ -16,6 +17,7 @@ npm install -g bower
     * 还可以考虑 `npm cache clean -f` 去除所有错误的cache
 * 科学上网 
 
+### 项目准备
 接下来, cd到你的项目文件夹内, 安装项目必须的一些依赖
 
 ```
@@ -31,13 +33,14 @@ bower install
 gulp 
 ```
 
+### 对eux-lab项目进行贡献
 如果要对wiki的基础项目做贡献, 可以考虑安装nodemon
 
 ```
 npm install -g nodemon
 ```
 
-### 开发wiki项目
+开发wiki项目
 
 ```
 npm start
