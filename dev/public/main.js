@@ -148,6 +148,10 @@ $(function() {
             });
         }
 
+        if (!$level.length) {
+            return;
+        }
+
         var scrollTop = $level.offset().top + $sidebar.scrollTop();
 
         $sidebar.animate({

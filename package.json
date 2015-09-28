@@ -1,7 +1,7 @@
 {
-  "name": "card-ui-demo",
+  "name": "eux-lab",
   "version": "0.0.1",
-  "description": "有个卡片UI组件Demo平台",
+  "description": "EUX Lab wiki",
   "main": "app.js",
   "dependencies": {
     "body-parser": "^1.14.0",
