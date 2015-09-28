@@ -124,7 +124,6 @@ var page = function(req, res, next) {
                         "<div><iframe class='-demo-iframe -demo-iframe-" + iframeProfile + "' src='" + url + "'></iframe></div>"
                         + pageDemo
                         + "<div demo-info></div>";
-                    paths[demoPath] = 1;
                 } else {
                     content = pageDemo;
                 }
