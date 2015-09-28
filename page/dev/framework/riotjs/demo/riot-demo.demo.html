@@ -1,0 +1,17 @@
+---template
+<div>
+    <my-test></my-test>
+</div>
+
+<script>
+    require(['/vendor/riotjs/riot+compiler.js'], function(riot) {
+        riot.compile("../_riot-comp/riot-helloworld.tag.html", function () {
+            bind('simple', locals.template, {
+                init: function () {
+                    riot.mount('*');
+                }
+            });
+        })
+
+    });
+</script>
