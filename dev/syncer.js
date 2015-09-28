@@ -1,6 +1,7 @@
 var fs = require('fs');
 var npath = require('path');
 var _ = require('lodash');
+var md5 = require('md5');
 
 var config = require('./config');
 var utils = require('./utils');
@@ -11,15 +12,19 @@ var trim = _.trim;
 var syncer = function (watcher) {
     watcher
         .on('unlinkDir', function (path) {
+            path = path.split('\\').join('/');
+
             if (/^\./.exec(path)) return;
             var basename = npath.basename(path);
         })
         .on('addDir', function (path) {
+            path = path.split('\\').join('/');
+
             var basename = npath.basename(path);
             if (/^\./.exec(path)) return;
 
             // syncing with normal page
-            if (!rgx.nonSpecial.exec(basename)) {
+            if (!rgx.nonSpecial.exec('/' + path)) {
                 console.log('Page directory detected: %s', path); //@test
 
                 var files = fs.readdirSync(path);
@@ -45,7 +50,7 @@ var syncer = function (watcher) {
 
                 // ok, set the folder name as the section's title
                 // NOTE: the name of the .md file will be displayed as the title on the visible page
-                fs.writeFileSync(path + '/' + basename + '.md', '');
+                fs.writeFileSync(path + '/' + basename + '.md', '@#:{' + md5(Math.random()) + '}#@\n\n\n');
             }
         });
 };

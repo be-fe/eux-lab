@@ -4,7 +4,7 @@ var rgx = {
     orderTxt: /order\.txt$/,
     index: /\/index$/,
 
-    nonSpecial: /^[._]/,
+    nonSpecial: /\/[._]/,
 
     leadingTilt: /^.*~/,
 
