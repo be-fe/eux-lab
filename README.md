@@ -6,7 +6,7 @@
 npm install -g forever
 npm install -g bower
 ```
-#### 如果npm安装出错 (没有合适地使用科学上网姿势的同学很可能出现这情况)
+**如果npm安装出错 (没有合适地使用科学上网姿势的同学很可能出现这情况)**
 
 考虑以下各种方法
 
@@ -23,7 +23,7 @@ npm install
 bower install
 ```
 
-#### 如果npm安装出错, 请参照上面的方法
+**如果npm安装出错, 请参照上面的方法**
 
 运行wiki, wiki页面在运行后会自动打开 (windows可能会有点小问题) 
 
