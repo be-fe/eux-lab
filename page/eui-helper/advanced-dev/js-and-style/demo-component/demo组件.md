@@ -56,7 +56,7 @@
     <span class="icon"></span>
      
     <script>
-        define('button', tpl({
+        bind('demo-func-name', tpl({
             _: locals.button,
             icon: locals.buttonIcon,
             data: {
