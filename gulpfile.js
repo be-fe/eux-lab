@@ -14,8 +14,11 @@ gulp.task('project-wiki', function() {
 });
 
 gulp.task('open-wiki', function() {
-    gulp.src('')
-        .pipe(open({uri: 'http://localhost:' + config.port}));
+    // @todo: use a better implementation for this delay opening
+    setTimeout(function() {
+        gulp.src('')
+            .pipe(open({uri: 'http://localhost:' + config.port}));
+    }, 5000);
 });
 
 gulp.task('default', ['open-wiki', 'project-wiki']);
