@@ -5,13 +5,12 @@
 
 <script>
     require(['/vendor/riotjs/riot+compiler.js'], function(riot) {
-        riot.compile("../_riot-comp/riot-helloworld.tag.html", function () {
+        riot.compile(_path + "/../../_riot-comp/riot-helloworld.tag.html", function () {
             bind('simple', locals.template, {
                 init: function () {
                     riot.mount('*');
                 }
             });
         })
-
     });
 </script>
