@@ -3,17 +3,17 @@
 
 # wiki项目开发计划
 
-### wiki share组件
+### markdown页面美化
 
-* 优化组件加载机制
+考虑用highlight.js来高亮代码.
 
-### iframe, page类demo
+### 直接修改页面
 
-* 允许body嵌入自定义的类
+考虑到可能有UE和UI的同学参与, 所以可以尝试把这个wiki架在某个服务器上, 并提供简单的编辑功能.
 
-### backend api 扩展
+### 从页面直接打开 webstorm, intellij 或 sublime 等编辑器
 
-* 使用一个 /backend/** 的接口, 允许wiki项目在后台暴露一下backend才能做的任务
+比如每个页面提供一个按钮之类的, 当点击时, 自动打开编辑器并定位到该页面的md文件.
 
 # wiki项目其他任务
 
@@ -27,7 +27,7 @@
     * 可考虑找sublime的牛来看写点相关的介绍
 
 
-# wiki项目路线图
+# wiki项目历史
 
 2015-09-27
 
@@ -35,3 +35,6 @@
 本次更新主要有:
 * wiki基础设置
 * 一些wiki的帮助文档
+* 完善wiki demo组件机制
+* iframe/page中允许设置body的class
+* /backend/** api简易架构
