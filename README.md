@@ -25,16 +25,23 @@ npm install
 bower install
 ```
 
-**如果npm安装出错, 请参照上面的方法**
+**如果npm安装出错, 请参照上面的方法来解决**
 
-运行wiki, wiki页面在运行后会自动打开 (windows可能会有点小问题) 
+最后, 执行一下命令运行wiki, wiki页面在运行后会自动打开 (windows可能会有点小问题) 
 
 ```
 gulp 
 ```
 
 ### 对eux-lab项目进行贡献
-如果要对wiki的基础项目做贡献, 可以考虑安装nodemon
+
+如果只对eux-lab的内容做贡献跟, 那么请考虑安装 `sourcetree` 和 `webstorm` (或 `sublime`)
+
+* [sourcetree](https://www.sourcetreeapp.com/)
+* [webstorm](https://www.jetbrains.com/webstorm/) - 考虑找合(po)理(jie)的网上的license...
+    * [sublime](http://www.sublimetext.com/)
+
+如果要对wiki的基础功能做贡献, 可以考虑安装nodemon
 
 ```
 npm install -g nodemon
