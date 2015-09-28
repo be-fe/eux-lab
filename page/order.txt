@@ -1,8 +1,8 @@
 eui-helper
 dev
 design-and-ue
-projects
 experience
+projects
 eux-team
 temp-page
 private

@@ -1,0 +1,174 @@
+---demoInfo
+<div class="-demo-info">
+</div>
+
+---demoInfoToggle
+<a>点击<%= d.linkText %>demo信息</a>
+
+---title
+<h3><%- d %></h3>
+
+---item
+<div class="-demo-item <%= d.hasChildren ? '' : '-demo-no-child' %>">
+    <div class="-demo-item-title">
+        <span class="fa fa-caret-down"></span>
+        <span class="fa fa-caret-right"></span>
+        <span class="-demo-item-title-text"><%- d.titleText %></span>
+    </div>
+    <div class="-demo-item-children">
+        <%= d.children && p._this(d.children) %>
+    </div>
+</div>
+
+<script>
+    define([], function () {
+        tpl({
+            _: locals.demoInfo
+        }, 'demoInfo');
+
+        tpl({
+            _: locals.demoInfoToggle,
+            data: {
+                linkText: '展现'
+            }
+        }, 'demoInfoToggle');
+
+        var jqueryParser = tpl({});
+
+        tpl({
+            /**
+             *
+             * @param d : {}
+             *  items
+             *  $container
+             * @param c
+             * @private
+             */
+            _: function (d, c) {
+                d.sections.forEach(function (section) {
+                    d.$container.append(c.sectionTitle(section.title));
+
+                    if (section.items.jquery && !section.items._) {
+                        d.$container.append(c.jquery(section.items));
+                    } else {
+                        d.$container.append(c.tpl({'root': section.items}));
+                    }
+                });
+
+                d.$container.on('mouseenter', '.-demo-item-title', function () {
+//                d.$container.find('.-demo-hovered').removeClass('-demo-hovered');
+                    $(this).parent().addClass('-demo-hovered');
+                }).on('mouseleave', '.-demo-item-title', function () {
+                    $(this).parent().removeClass('-demo-hovered');
+                }).on('click', '.-demo-item-title-text', function () {
+                    var $p = $(this).parent().parent();
+                    $p.toggleClass('-demo-collapsed', false);
+
+                    var $items = $p.children('.-demo-item-children')
+                            .children('.-demo-item');
+
+                    $items.toggleClass('-demo-collapsed', !$items.eq(0).hasClass('-demo-collapsed'));
+
+                }).on('click', '.fa', function () {
+                    $(this).parent().parent().toggleClass('-demo-collapsed');
+                });
+            },
+            sectionTitle: locals.title,
+            jquery: {
+                _: function (d, c) {
+                    var html = '';
+
+                    if (d.is('[rendered-demo]')) {
+                        return c._this(d.children());
+                    }
+
+                    d.each(function () {
+                        var child = c.getItem($(this));
+                        html += c.itemTpl(child);
+                    });
+
+                    return html;
+                },
+                getItem: function (d) {
+                    var item = {}, $item = d;
+
+                    var idText = $item.attr('id'),
+                            clsText = $.trim($item.attr('class')).split(/\s/g).join('.'),
+                            attrs = [].slice.call($item[0].attributes);
+
+                    var attrText = attrs
+                            .filter(function (a) {
+                                return a.name != 'id' && a.name != 'class'
+                            })
+                            .map(function (a) {
+                                return '[' + a.name + (a.value ? '=' + a.value : '') + ']';
+                            })
+                            .join('');
+
+                    item.titleText = $item[0].tagName.toLocaleLowerCase()
+                            + (idText ? '#' + idText : '')
+                            + (clsText ? '.' + clsText : '')
+                            + (attrText ? attrText : '');
+
+                    item.children = $item.children();
+                    item.hasChildren = item.children.length;
+
+                    return item;
+                },
+                itemTpl: locals.item
+            },
+            tpl: {
+                _: function (d, c) {
+                    var html = '';
+
+                    for (var key in d) {
+                        var child = c.getItem({
+                            val: d[key],
+                            key: key
+                        });
+
+                        if (child) {
+                            html += c.itemTpl(child);
+                        }
+                    }
+
+                    return html;
+                },
+                getItem: function (d) {
+                    if (d.key == '_') {
+                        return;
+                    }
+
+                    if (d.val && typeof d.val == 'object') {
+
+                        var hasChildren = false;
+                        for (var k in d.val) {
+                            if (k.substr(0, 1) != '_') {
+                                hasChildren = true;
+                                break;
+                            }
+                        }
+
+                        return {
+                            titleText: d.key + ' : ' + (d.val._ ? 'func' :
+                                    d.val instanceof Array ? '[]' : '{}'),
+                            children: d.val,
+                            hasChildren: hasChildren
+                        }
+                    } else if (typeof d.val != 'function') {
+                        return {
+                            titleText: d.key + ' = ' + JSON.stringify(d.val),
+                            hasChildren: false
+                        }
+                    } else {
+                        return {
+                            titleText: d.key + ' : func ',
+                            hasChildren: false
+                        }
+                    }
+                },
+                itemTpl: locals.item
+            }
+        }, 'demoRenderInfo');
+    });
+</script>

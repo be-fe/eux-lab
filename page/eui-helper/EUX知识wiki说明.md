@@ -1,13 +1,15 @@
+@#:{663d0b555284ec045a0c394901681335}#@
 # 规范说明
 
 ## 目的
 
 这个wiki工具, 是为了:
 
-* 为EUX blog收集积累好文章
-* 为有个卡片沉淀可在初始版本使用的知识
+* 团队知识沉淀
 * 创建个快速可用的小lab
 * 团队熟悉Git协作
+* 为有个卡片沉淀可在初始版本使用的知识
+* 为EUX blog收集积累好文章
 
 wiki使用markdown的规范来撰写, 利用chokidar来进行监视和编译更新. 可以参照 [测试页面](get-started/test-markdown-page/index)
  
@@ -16,7 +18,7 @@ wiki使用markdown的规范来撰写, 利用chokidar来进行监视和编译更�
 
 ## 项目启动
 
-    # 如果没有node, 先请安装node, 同时, 确保一下的node插件可用
+    # 如果没有node, 先请安装node, 同时, 确保以下的node插件可用
     
     npm install -g forever
     npm install -g bower
@@ -41,6 +43,8 @@ wiki使用markdown的规范来撰写, 利用chokidar来进行监视和编译更�
     
     
 启动之后, 访问 `http://localhost:7788`
+
+@todo: 考虑有一个允许个人设置的机制, 这样可以让大家设置自己的port
     
 继续阅读: 
 [开始使用](get-started/index)

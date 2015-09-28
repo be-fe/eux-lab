@@ -300,13 +300,8 @@ var compileJs = function (res, isShareJs, noCacheCheck) {
 
     compiled = compiled.replace(/\$\$PATH\$\$/g, JSON.stringify(res.path.replace(rgx.demo, '')));
 
-    if (isShareJs) {
-        compiled = compiled.replace('$$CLOSURE_START$$', 'defineTpls(' + stringifiedBase + ',function() {');
-        compiled = compiled.replace('$$CLOSURE_END$$', '});');
-    } else {
-        compiled = compiled.replace('$$CLOSURE_START$$', ';(function() {');
-        compiled = compiled.replace('$$CLOSURE_END$$', '})();');
-    }
+    compiled = compiled.replace('$$CLOSURE_START$$', ';(function() {');
+    compiled = compiled.replace('$$CLOSURE_END$$', '})();');
 
     var locals = [];
     var scripts = [];
@@ -422,6 +417,7 @@ module.exports = {
         var processCallback = function() {
             if (!((paths[0] + '.demo.html') in resources.demoJs)) {
                 setTimeout(processCallback, 1000);
+                return;
             }
 
             var css = [], js = [];
@@ -437,6 +433,24 @@ module.exports = {
             });
         };
 
+        processCallback();
+    },
+    getDemoJs: function(path, callback) {
+        var processCallback = function() {
+            if (!((path + '.demo.html') in resources.demoJs)) {
+                setTimeout(processCallback, 1000);
+                return;
+            }
+
+            var js = resources.demoJs[path + '.demo.html'];
+            var css = resources.demoLess[path + '.demo.less'];
+            var demoJs = fs.readFileSync(__dirname + '/templates/demo-js-template.js').toString();
+
+            demoJs = demoJs.replace('$$JS$$', js)
+                .replace('$$CSS$$', JSON.stringify(css));
+
+            callback(demoJs);
+        };
         processCallback();
     }
 };

@@ -2,8 +2,10 @@ var chokidar = require('chokidar');
 var express = require('express');
 var st = require('st');
 var fs = require('fs');
+var bodyParser = require('body-parser');
 
 var config = require('./dev/config');
+var simpleData = require('./dev/backend/simple-data');
 var syncer = require('./dev/syncer');
 var compiler = require('./dev/compiler');
 var page = require('./dev/page');
@@ -21,6 +23,8 @@ compiler.watch(watcher);
 
 var app = express();
 
+app.use(bodyParser.urlencoded({extend: true}));
+
 var getIndexPage = function(req, res, next) {
     console.log(req.url);
     var content = new String(fs.readFileSync('./dev/public/index.html'))
@@ -28,6 +32,9 @@ var getIndexPage = function(req, res, next) {
     content = content.replace('@@CONTENT_LIST@@', syncer.renderLevel());
     res.end(content);
 };
+
+require('./dev/backend/backend-modules.js').setup(app, config);
+
 app.get('/', getIndexPage);
 app.get('/index.html', getIndexPage);
 

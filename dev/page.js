@@ -4,6 +4,7 @@ var marked = require('marked');
 var less = require('less');
 var npath = require('path');
 var _ = require('lodash');
+var md5 = require('md5');
 
 var syncer = require('./syncer');
 var compiler = require('./compiler');
@@ -74,6 +75,17 @@ var page = function(req, res, next) {
         if (mdFile) {
             var mdContent = new String(fs.readFileSync(path + '/' + mdFile)).toString();
 
+            // 如果没有page的index标记, 则新建一个
+            var indexMatch = rgx.indexMarkerSingle.exec(mdContent);
+            if (!indexMatch) {
+                mdContent = '@#:{' + md5(Math.random()) + '}#@\n\n\n' + mdContent;
+                fs.writeFileSync(path + '/' + mdFile, mdContent);
+
+                //console.log(mdContent); //@test
+            } else {
+                //console.log(indexMatch[0]); //@test
+            }
+
             // process markdowns
             html = marked(mdContent);
 
@@ -81,9 +93,12 @@ var page = function(req, res, next) {
             html = fs.readFileSync(__dirname + '/templates/page.template.html').toString().replace('@@CONTENT@@', html);
             var paths = {};
 
-            html = html.replace(rgx.demoTag, function(__, type, iframeProfile, fullName) {
+            html = html.replace(rgx.demoTag, function(__, type, iframeProfile, bodyClass, fullName) {
                 iframeProfile = iframeProfile || '!default';
+                bodyClass = bodyClass || '.' + config.globalClass;
+
                 iframeProfile = trim(iframeProfile.substr(1));
+                bodyClass = trim(bodyClass.substr(1));
 
                 var parts = fullName.split('/');
                 var name = trim(parts[0]);
@@ -94,7 +109,7 @@ var page = function(req, res, next) {
 
                 ensureFiles(path, name);
                 var demoPath = path + '/' + name;
-                var url = '/' + path.split('"').join('\\""') + '/' + name.split('"').join('\\"') + '.demo' + '?func=' + func;
+                var url = '/' + path.split('"').join('\\""') + '/' + name.split('"').join('\\"') + '.demo' + '?func=' + func + '&bodyClass=' + bodyClass ;
 
                 var pageDemo = '<div><a class="-demo-page-link" '
                     + 'href="' + url
@@ -106,9 +121,10 @@ var page = function(req, res, next) {
                     paths[demoPath] = 1;
                 } else if (type == 'iframe') {
                     content =
-                        "<div><iframe class='-demo-inline -demo-inline-" + iframeProfile + "' src='" + url + "'></iframe></div>"
+                        "<div><iframe class='-demo-iframe -demo-iframe-" + iframeProfile + "' src='" + url + "'></iframe></div>"
                         + pageDemo
                         + "<div demo-info></div>";
+                    paths[demoPath] = 1;
                 } else {
                     content = pageDemo;
                 }
@@ -117,10 +133,15 @@ var page = function(req, res, next) {
 
             paths = _.map(paths, function(__, path) {return path;});
             html = html.replace(/@\\(inline|iframe|page)/g, '@$1');
+
+            html = html.replace(rgx.indexMarkerRepeat, '<div index-keys="$1" hash-key="$2"></div>');
+
             if (paths.length) {
                 compiler.getDemo(paths, function (demo) {
                     html = html.replace('@@CSS@@', demo.css);
-                    html = html.replace('@@JS@@', demo.js);
+                    html = html.replace('@@JS@@', paths.map(function(path) {
+                        return 'require(["/' + path + '.demo.js"], function() {});';
+                    }).join('\n'));
 
                     res.end(html);
                 });
@@ -129,20 +150,26 @@ var page = function(req, res, next) {
                 html = html.replace('@@JS@@', '');
                 res.end(html);
             }
-            //console.log(html); // @test
-            return;
         }
+        return;
     } else if (rgx.demoPage.exec(path) && fs.existsSync(path + '.html')) {
         html = fs.readFileSync(__dirname + '/templates/demo-page.template.html').toString();
         var demoPath = path.replace(rgx.demoPage, '');
         var name = npath.basename(demoPath);
         compiler.getDemo([demoPath], function(demo) {
-            html = html.replace('@@CLASS@@', config.globalClass);
-            html = html.replace('@@CSS@@', demo.css);
-            html = html.replace('@@JS@@', demo.js);
+            html = html.replace('@@CLASS@@', req.query.bodyClass || config.globalClass);
+            html = html.replace('@@JS@@', 'require(["/' + demoPath + '.demo.js"], function() {});');
             html = html.replace('@@CONTENT@@', "<div demo=" + JSON.stringify(demoPath) + " func='" + req.query.func + "'></div>");
 
             res.end(html);
+        });
+        return;
+    } else if (rgx.demoJs.exec(path)) {
+        var demoPath = path.replace(rgx.demoJs, '');
+        var name = npath.basename(demoPath);
+
+        compiler.getDemoJs([demoPath], function(demoJs) {
+            res.end(demoJs);
         });
         return;
     }

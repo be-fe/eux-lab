@@ -1,0 +1,33 @@
+---demoComp
+
+<div class="article">
+    <h4><%- d.title %></h4>
+    <div class="description"><% d.descr %></div>
+    <div class="content"><%= c.content(d) %></div>
+</div>
+
+---demoList
+<ul>
+    <% d.list.forEach(function(item) {
+        print(c.listItem(item));
+    }) %>
+</ul>
+
+---demoListItem
+<li><%- d %></li>
+
+<script>
+
+    define([], function() {
+        tpl({
+            _: locals.demoComp,
+            content: {
+                _: '<%= c.list(d) %>',
+                list: {
+                    _: locals.demoList,
+                    listItem: tpl(locals.demoListItem, 'demoListItem')
+                }
+            }
+        }, 'demoComp');
+    });
+</script>
